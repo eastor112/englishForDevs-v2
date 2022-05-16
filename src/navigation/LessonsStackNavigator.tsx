@@ -1,8 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TopicsScreen from '../screens/topics/TopicsScreen';
-import PracticeScreen from '../screens/practice/PracticeScreen';
 import LessonsScreen from '../screens/lessons/LessonsScreen';
+import PracticeTopTabNavigator from './PracticeTopTabNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +14,7 @@ const LessonsStackNavigator = () => {
       }}>
       <Stack.Screen name="Lessons" component={LessonsScreen} />
       <Stack.Screen name="Topics" component={TopicsScreen} />
-      <Stack.Screen name="Practice" component={PracticeScreen} />
+      <Stack.Screen name="Practice" component={PracticeTopTabNavigator} />
     </Stack.Navigator>
   );
 };

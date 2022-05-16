@@ -1,43 +1,29 @@
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {Button, Appbar, Text, useTheme} from 'react-native-paper';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Dimensions} from 'react-native';
+import AppBar from '../../components/organisms/appBar/AppBar';
+import LessonInfo from '../../components/organisms/lessonInfo/LessonInfo';
+import TopicCard from '../../components/organisms/topicCard/TopicCard';
 
 interface Props extends NativeStackScreenProps<any, any> {}
 
-const TopicsScreen = ({navigation}: Props) => {
-  const {colors} = useTheme();
+const windowHeight = Dimensions.get('window').height;
 
+const TopicsScreen = ({navigation}: Props) => {
   return (
     <View>
-      <Appbar>
-        <Appbar.Header>
-          <Appbar.Action icon="menu" onPress={() => {}} />
-        </Appbar.Header>
-        <View style={styles.logocontainer}>
-          <Icon
-            name="lightbulb-on-outline"
-            size={30}
-            color={colors.text}
-            style={{}}
-          />
-          <View>
-            <Text style={styles.title}>{'${eFD}'}</Text>
-            <View style={styles.linksContainer}>
-              <Text style={styles.links}>{'Lessons >'}</Text>
-              <Text style={styles.links}>{'Topics'}</Text>
-            </View>
-          </View>
-        </View>
-      </Appbar>
-      <Button
-        mode="contained"
-        onPress={() => {
-          navigation.navigate('Practice');
-        }}>
-        Practice
-      </Button>
+      <AppBar />
+
+      <LessonInfo />
+      <ScrollView style={styles.scrollContainer}>
+        <TopicCard navigate={navigation.navigate} />
+        <TopicCard navigate={navigation.navigate} />
+        <TopicCard navigate={navigation.navigate} />
+        <TopicCard navigate={navigation.navigate} />
+        <TopicCard navigate={navigation.navigate} />
+        <View style={styles.offset} />
+      </ScrollView>
     </View>
   );
 };
@@ -45,23 +31,10 @@ const TopicsScreen = ({navigation}: Props) => {
 export default TopicsScreen;
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 5,
+  scrollContainer: {
+    height: windowHeight,
   },
-
-  links: {
-    fontSize: 12,
-    marginLeft: 5,
-  },
-
-  logocontainer: {
-    marginLeft: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  linksContainer: {
-    flexDirection: 'row',
+  offset: {
+    height: 80,
   },
 });

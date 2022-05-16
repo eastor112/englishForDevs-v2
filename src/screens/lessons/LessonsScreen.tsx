@@ -10,8 +10,7 @@ interface Props extends NativeStackScreenProps<any, any> {}
 
 const windowHeight = Dimensions.get('window').height;
 
-const LessonsScreen = ({}: Props) => {
-  // const {colors} = useTheme();
+const LessonsScreen = ({navigation}: Props) => {
   return (
     <View style={styles.scrollContainer}>
       <AppBar />
@@ -24,9 +23,9 @@ const LessonsScreen = ({}: Props) => {
           />
         </View>
 
-        <LessonItem />
+        <LessonItem navigate={navigation.navigate} />
 
-        <LessonItem />
+        <LessonItem navigate={navigation.navigate} />
       </ScrollView>
     </View>
   );
