@@ -1,11 +1,10 @@
 import {View, StyleSheet} from 'react-native';
 import {List} from 'react-native-paper';
-
 import React from 'react';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
 
-const Translation = () => {
-  const [expanded, setExpanded] = React.useState(true);
+const PhrasesTranslation = () => {
+  const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
 
@@ -13,24 +12,17 @@ const Translation = () => {
     <List.Section>
       <List.Accordion
         title="Translation"
-        titleNumberOfLines={4}
+        titleNumberOfLines={1}
         titleStyle={styles.definitionTitle}
         left={props => <ViewNoView {...props} />}
         right={() => <View />}
         expanded={expanded}
         onPress={handlePress}>
         <List.Item
-          title="Cometer"
-          titleNumberOfLines={1}
+          title="Hey! realiza el commit con las nuevas características en la rama de desarrollo!"
+          titleNumberOfLines={4}
           titleStyle={styles.definitionTitle}
-          description="commit, make, foul"
-          left={props => <List.Icon {...props} icon="translate" />}
-        />
-        <List.Item
-          title="Confirmación"
-          titleNumberOfLines={1}
-          titleStyle={styles.definitionTitle}
-          description="Do, make, ask, be, cause, commit"
+          description="Traducción"
           left={props => <List.Icon {...props} icon="translate" />}
         />
       </List.Accordion>
@@ -38,7 +30,7 @@ const Translation = () => {
   );
 };
 
-export default Translation;
+export default PhrasesTranslation;
 
 const styles = StyleSheet.create({
   definitionTitle: {

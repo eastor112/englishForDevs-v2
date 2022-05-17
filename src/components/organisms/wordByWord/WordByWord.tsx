@@ -1,18 +1,18 @@
-import {List} from 'react-native-paper';
-import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import SoundNoSound from '../../molecules/soundNoSound/SoundNoSound';
-import ViewNoView from '../../molecules/viewNoView/ViewNoView';
+import {List} from 'react-native-paper';
 
-const Definitions = () => {
+import React from 'react';
+import ViewNoView from '../../molecules/viewNoView/ViewNoView';
+import SoundNoSound from '../../molecules/soundNoSound/SoundNoSound';
+
+const WordByWord = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
   return (
-    <List.Section title="Technical definition">
+    <List.Section>
       <List.Accordion
-        title="A commit is an operation that records changes to one or more files in your
-          branch."
+        title="Word by Word"
         titleNumberOfLines={4}
         titleStyle={styles.definitionTitle}
         left={props => <ViewNoView {...props} />}
@@ -20,23 +20,25 @@ const Definitions = () => {
         expanded={expanded}
         onPress={handlePress}>
         <List.Item
-          title="Listen"
-          description="Repeat after the speaker"
+          title="commit"
+          titleNumberOfLines={1}
+          titleStyle={styles.definitionTitle}
+          description="confirmar, hacer, causar, cometer"
           left={() => <SoundNoSound />}
         />
         <List.Item
-          title="Una confirmación es una operación que registra cambios a uno o más archivos de una rama"
-          titleNumberOfLines={4}
+          title="feature"
+          titleNumberOfLines={1}
           titleStyle={styles.definitionTitle}
-          description="Traducción"
-          left={props => <List.Icon {...props} icon="translate" />}
+          description="característica, función, propiedad"
+          left={() => <SoundNoSound />}
         />
       </List.Accordion>
     </List.Section>
   );
 };
 
-export default Definitions;
+export default WordByWord;
 
 const styles = StyleSheet.create({
   definitionTitle: {

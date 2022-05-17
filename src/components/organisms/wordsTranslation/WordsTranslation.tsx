@@ -1,18 +1,16 @@
+import {View, StyleSheet} from 'react-native';
 import {List} from 'react-native-paper';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import SoundNoSound from '../../molecules/soundNoSound/SoundNoSound';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
 
-const Definitions = () => {
+const Translation = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
   return (
-    <List.Section title="Technical definition">
+    <List.Section>
       <List.Accordion
-        title="A commit is an operation that records changes to one or more files in your
-          branch."
+        title="Translation"
         titleNumberOfLines={4}
         titleStyle={styles.definitionTitle}
         left={props => <ViewNoView {...props} />}
@@ -20,15 +18,17 @@ const Definitions = () => {
         expanded={expanded}
         onPress={handlePress}>
         <List.Item
-          title="Listen"
-          description="Repeat after the speaker"
-          left={() => <SoundNoSound />}
+          title="Cometer"
+          titleNumberOfLines={1}
+          titleStyle={styles.definitionTitle}
+          description="commit, make, foul"
+          left={props => <List.Icon {...props} icon="translate" />}
         />
         <List.Item
-          title="Una confirmación es una operación que registra cambios a uno o más archivos de una rama"
-          titleNumberOfLines={4}
+          title="Confirmación"
+          titleNumberOfLines={1}
           titleStyle={styles.definitionTitle}
-          description="Traducción"
+          description="Do, make, ask, be, cause, commit"
           left={props => <List.Icon {...props} icon="translate" />}
         />
       </List.Accordion>
@@ -36,7 +36,7 @@ const Definitions = () => {
   );
 };
 
-export default Definitions;
+export default Translation;
 
 const styles = StyleSheet.create({
   definitionTitle: {

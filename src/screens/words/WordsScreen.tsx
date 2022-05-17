@@ -1,23 +1,27 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import styled from 'styled-components/native';
 import InfoWordOrPhrase from '../../components/molecules/infoWordOrPhrase/InfoWordOrPhrase';
 import Definitions from '../../components/organisms/definitions/Definitions';
 import MainWordOrPhrase from '../../components/organisms/mainWordOrPhrase/MainWordOrPhrase';
-import Translation from '../../components/organisms/translation/Translation';
+import WordsTranslation from '../../components/organisms/wordsTranslation/WordsTranslation';
 
 const WordsScreen = () => {
   return (
-    <ViewContainer>
+    <ViewContainer style={styles.viewContainer}>
       <View>
         <InfoWordOrPhrase />
 
         <ViewTopContainer>
-          <MainWordOrPhrase />
+          <MainWordOrPhrase
+            isWord={true}
+            content="Commit"
+            pronuntiation="kəˈmit"
+          />
 
           <ViewScrollContainer>
-            <Translation />
+            <WordsTranslation />
             <Definitions />
           </ViewScrollContainer>
         </ViewTopContainer>
@@ -39,6 +43,15 @@ const WordsScreen = () => {
 };
 
 export default WordsScreen;
+
+const styles = StyleSheet.create({
+  viewContainer: {
+    borderLeftWidth: 1,
+    borderRadius: 10,
+    borderRightWidth: 1,
+    borderColor: 'gray',
+  },
+});
 
 const ViewContainer = styled.View`
   margin: 10px 15px;

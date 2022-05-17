@@ -4,14 +4,18 @@ import React from 'react';
 import styled from 'styled-components/native';
 import SoundNoSound from '../../molecules/soundNoSound/SoundNoSound';
 
-const MainWordOrPhrase = () => {
-  const isWord = true;
+interface Props {
+  isWord: boolean;
+  content: string;
+  pronuntiation?: string;
+}
 
+const MainWordOrPhrase = ({isWord = true, content, pronuntiation}: Props) => {
   return (
     <WordOrPhraseContainer>
       <ViewWords>
-        <WordOrPhrase>Commit</WordOrPhrase>
-        {isWord && <Pronunciation>[ kəˈmit ]</Pronunciation>}
+        <WordOrPhrase>{content}</WordOrPhrase>
+        {isWord && <Pronunciation>[ {pronuntiation} ]</Pronunciation>}
       </ViewWords>
       <SoundContainer>
         <SoundNoSound />
