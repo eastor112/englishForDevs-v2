@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setDark(true);
+      setDark(false);
     }, 5000);
   }, []);
 

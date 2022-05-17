@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ViewNoView = ({color}: Props) => {
-  const [view, setView] = useState(true);
+  const [view, setView] = useState(false);
 
   useEffect(() => {
     setView(!view);

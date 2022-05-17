@@ -1,12 +1,67 @@
-import {View, Text} from 'react-native';
+import {Text} from 'react-native-paper';
 import React from 'react';
+import LearnedWordsChart from '../../components/organisms/learnedWordsChart/LearnedWordsChart';
+import AppBar from '../../components/organisms/appBar/AppBar';
+import styled from 'styled-components/native';
+import StatisticsNumbers from '../../components/organisms/statisticsNumbers/StatisticsNumbers';
 
 const StatsScreen = () => {
   return (
-    <View>
-      <Text>statsScreen</Text>
-    </View>
+    <>
+      <AppBar />
+      <ViewContainer>
+        <GreetText>Hello Emerson!</GreetText>
+        <InfoText>Here you can check your progress. Remember:</InfoText>
+
+        <ViewMotivationalPhrase>
+          <PhraseText>
+            "Discipline will sooner or later defeat intelligence."
+          </PhraseText>
+          <AuthorText>- Yokoi Kenji</AuthorText>
+        </ViewMotivationalPhrase>
+
+        <StatisticsNumbers />
+
+        <LearnedWordsChart />
+      </ViewContainer>
+    </>
   );
 };
 
 export default StatsScreen;
+
+const ViewContainer = styled.ScrollView`
+  flex: 1;
+  padding: 10px 20px;
+`;
+
+const GreetText = styled(Text)`
+  font-size: 24px;
+  margin-top: 10px;
+`;
+
+const InfoText = styled(Text)`
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+`;
+
+const ViewMotivationalPhrase = styled.View`
+  background-color: #00c2cc33;
+  padding: 15px 15px;
+  border: 1px solid #00c2cc44;
+  margin-bottom: 15px;
+`;
+
+const PhraseText = styled(Text)`
+  font-size: 14px;
+  text-align: center;
+`;
+
+const AuthorText = styled(Text)`
+  font-size: 12px;
+  font-weight: 300;
+  align-self: flex-end;
+  margin-top: 10px;
+  margin-right: 10px;
+`;
