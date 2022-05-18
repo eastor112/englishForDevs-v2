@@ -1,6 +1,6 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import React from 'react';
-import ReviewScreen from '../screens/review/ReviewScreen';
+import ReviewModes from '../screens/reviewModes/ReviewModes';
 import StatsScreen from '../screens/stats/StatsScreen';
 import LessonsStackNavigator from './LessonsStackNavigator';
 
@@ -10,7 +10,7 @@ const MainBottomTabNavigator = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="LessonsNav" component={LessonsStackNavigator} />
-      <Tab.Screen name="Review" component={ReviewScreen} />
+      <Tab.Screen name="Review" component={ReviewModes} />
       <Tab.Screen name="Stats" component={StatsScreen} />
     </Tab.Navigator>
   );

@@ -3,7 +3,6 @@ import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import styled from 'styled-components/native';
 import InfoWordOrPhrase from '../../components/molecules/infoWordOrPhrase/InfoWordOrPhrase';
-import AppBar from '../../components/organisms/appBar/AppBar';
 import Definitions from '../../components/organisms/definitions/Definitions';
 import MainWordOrPhrase from '../../components/organisms/mainWordOrPhrase/MainWordOrPhrase';
 import WordsTranslation from '../../components/organisms/wordsTranslation/WordsTranslation';
@@ -11,8 +10,6 @@ import WordsTranslation from '../../components/organisms/wordsTranslation/WordsT
 const ReviewScreen = () => {
   return (
     <>
-      <AppBar />
-
       <ViewContainer style={styles.viewContainer}>
         <View>
           <InfoWordOrPhrase />
