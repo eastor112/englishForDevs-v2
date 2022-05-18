@@ -15,12 +15,12 @@ import {name as appName} from './app.json';
 import AuthStackNavigator from './src/navigation/AuthStackNavigator';
 
 const App = () => {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setDark(false);
-    }, 5000);
+    }, 10000);
   }, []);
 
   const customDefaultTheme = {

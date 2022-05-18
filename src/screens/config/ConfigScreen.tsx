@@ -88,6 +88,7 @@ const ViewContainer = styled.View`
 const ViewTitle = styled.View`
   flex-direction: row;
   align-items: center;
+  padding: 0px 20px;
 `;
 
 const TextTitle = styled(Text)`
