@@ -8,13 +8,16 @@ import {
   StyledTextLoginPaper,
   StyledViewContainer,
 } from '../../components/atoms';
-import {StyledRedirectMessage} from '../../components/molecules';
-import StyledBrandApp from '../../components/molecules/styledBrandApp/StyledBrandApp';
+import {
+  StyledRedirectMessage,
+  StyledBrandApp,
+} from '../../components/molecules';
 import {Formik} from 'formik';
-import auth from '@react-native-firebase/auth';
-import {IUserLogin} from './auth.types';
+import {IUserSignUp} from './auth.types';
 import * as yup from 'yup';
 import {StyleSheet} from 'react-native';
+import {useAppDispatch} from '../../redux/store';
+import {signUpWithEmailandPassword} from '../../redux/slices/authSlice';
 
 interface Props extends NativeStackScreenProps<any, any> {}
 
@@ -33,22 +36,10 @@ const SignupScreen = ({navigation}: Props) => {
   const {colors} = useTheme();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignUp = async ({email, password}: IUserLogin) => {
-    try {
-      const suscriber = await auth().createUserWithEmailAndPassword(
-        email,
-        password,
-      );
-      const response = await suscriber.user.sendEmailVerification();
-      console.log(
-        '🚀 ~ file: SignupScreen.tsx ~ line 40 ~ handleSignUp ~ response',
-        response,
-      );
+  const dispatch = useAppDispatch();
 
-      console.log('User created and email sent');
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handleSignUp = async (values: IUserSignUp) => {
+    dispatch(signUpWithEmailandPassword(values));
   };
 
   return (
@@ -63,7 +54,7 @@ const SignupScreen = ({navigation}: Props) => {
 
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{email: '', password: ''}}
+          initialValues={{displayName: '', email: '', password: ''}}
           onSubmit={values => handleSignUp(values)}>
           {({
             handleChange,
@@ -75,6 +66,27 @@ const SignupScreen = ({navigation}: Props) => {
             isValid,
           }) => (
             <>
+              {errors.email && touched.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
+              <StyledTextInputPaper
+                style={{
+                  backgroundColor: colors.surface,
+                }}
+                mode="flat"
+                label="Name"
+                onChangeText={handleChange('displayName')}
+                onBlur={handleBlur('displayName')}
+                value={values.displayName}
+                left={
+                  <TextInput.Icon
+                    name="account"
+                    size={22}
+                    color={colors.text}
+                    disabled
+                  />
+                }
+              />
               {errors.email && touched.email && (
                 <Text style={styles.errorText}>{errors.email}</Text>
               )}
@@ -96,7 +108,6 @@ const SignupScreen = ({navigation}: Props) => {
                   />
                 }
               />
-
               {errors.password && touched.password && (
                 <Text style={styles.errorText}>{errors.password}</Text>
               )}
@@ -136,7 +147,6 @@ const SignupScreen = ({navigation}: Props) => {
                   )
                 }
               />
-
               <StyledButtonLoginPaper
                 mode="contained"
                 dark={true}

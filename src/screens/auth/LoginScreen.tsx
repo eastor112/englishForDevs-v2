@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Text, TextInput, useTheme, Portal, Modal} from 'react-native-paper';
 import {Formik} from 'formik';
-import auth from '@react-native-firebase/auth';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import * as yup from 'yup';
 import {IUserLogin} from './auth.types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -22,7 +20,10 @@ import {
 } from '../../components/atoms';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
-import {loginWithEmailandPassword} from '../../redux/slices/authSlice';
+import {
+  loginWithEmailandPassword,
+  loginWithGoogle,
+} from '../../redux/slices/authSlice';
 import {clearError} from '../../redux/slices/authSlice';
 import AuthErrorModal from '../../components/organisms/authErrorModal/AuthErrorModal';
 
@@ -38,19 +39,6 @@ const loginValidationSchema = yup.object().shape({
 });
 
 interface Props extends NativeStackScreenProps<any, any> {}
-
-GoogleSignin.configure({
-  webClientId:
-    '205392024757-86s953d4elbupalakt5ginic3elj152a.apps.googleusercontent.com',
-});
-
-async function onGoogleButtonPress() {
-  const {idToken} = await GoogleSignin.signIn();
-
-  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-  return auth().signInWithCredential(googleCredential);
-}
 
 const LoginScreen = ({navigation}: Props) => {
   const {colors} = useTheme();
@@ -74,6 +62,10 @@ const LoginScreen = ({navigation}: Props) => {
 
   const handleLogin = async (values: IUserLogin) => {
     dispatch(loginWithEmailandPassword(values));
+  };
+
+  const handleGoogleLogin = async () => {
+    dispatch(loginWithGoogle());
   };
 
   return (
@@ -194,11 +186,7 @@ const LoginScreen = ({navigation}: Props) => {
         <StyledGoogleButtonPaper
           socialMediaName="Google"
           imageName="google.png"
-          onPress={() =>
-            onGoogleButtonPress().then(() =>
-              console.log('Signed in with Google!'),
-            )
-          }
+          onPress={handleGoogleLogin}
         />
       </StyledViewContainer>
     </StyledLoginGradient>
