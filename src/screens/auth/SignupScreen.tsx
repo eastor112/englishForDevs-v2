@@ -9,10 +9,10 @@ import {
   StyledViewContainer,
 } from '../../components/atoms';
 import {StyledRedirectMessage} from '../../components/molecules';
-import StyledBrandApp from '../../components/molecules/StyledBrandApp';
+import StyledBrandApp from '../../components/molecules/styledBrandApp/StyledBrandApp';
 import {Formik} from 'formik';
 import auth from '@react-native-firebase/auth';
-import {userLogin} from './auth.types';
+import {IUserLogin} from './auth.types';
 import * as yup from 'yup';
 import {StyleSheet} from 'react-native';
 
@@ -33,10 +33,19 @@ const SignupScreen = ({navigation}: Props) => {
   const {colors} = useTheme();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async ({email, password}: userLogin) => {
+  const handleSignUp = async ({email, password}: IUserLogin) => {
     try {
-      const user = await auth().createUserWithEmailAndPassword(email, password);
-      console.log(user);
+      const suscriber = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      const response = await suscriber.user.sendEmailVerification();
+      console.log(
+        '🚀 ~ file: SignupScreen.tsx ~ line 40 ~ handleSignUp ~ response',
+        response,
+      );
+
+      console.log('User created and email sent');
     } catch (error) {
       console.log(error.message);
     }
@@ -55,7 +64,7 @@ const SignupScreen = ({navigation}: Props) => {
         <Formik
           validationSchema={loginValidationSchema}
           initialValues={{email: '', password: ''}}
-          onSubmit={values => handleLogin(values)}>
+          onSubmit={values => handleSignUp(values)}>
           {({
             handleChange,
             handleBlur,

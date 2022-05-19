@@ -13,6 +13,8 @@ import {
 } from 'react-native-paper';
 import {name as appName} from './app.json';
 import AuthStackNavigator from './src/navigation/AuthStackNavigator';
+import store from './src/redux/store';
+import {Provider as ReduxProvider} from 'react-redux';
 
 const App = () => {
   const [dark, setDark] = useState(true);
@@ -54,11 +56,13 @@ const App = () => {
   const theme = dark ? customDarkTheme : customDefaultTheme;
 
   return (
-    <NavigationContainer theme={theme}>
-      <PaperProvider theme={theme}>
-        <AuthStackNavigator />
-      </PaperProvider>
-    </NavigationContainer>
+    <ReduxProvider store={store}>
+      <NavigationContainer theme={theme}>
+        <PaperProvider theme={theme}>
+          <AuthStackNavigator />
+        </PaperProvider>
+      </NavigationContainer>
+    </ReduxProvider>
   );
 };
 

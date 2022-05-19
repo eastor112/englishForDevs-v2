@@ -13,7 +13,7 @@ const StyledGoogleButtonPaper = ({socialMediaName, onPress}: Props) => {
     <StyledButton
       mode="contained"
       icon={() => (
-        <StyledImage source={require('../../assets/images/google.png')} />
+        <StyledImage source={require('../../../assets/images/google.png')} />
       )}
       onPress={onPress}>
       <StyledText>Login with {socialMediaName}</StyledText>

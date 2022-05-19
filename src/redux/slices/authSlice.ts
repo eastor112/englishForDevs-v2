@@ -1,34 +1,62 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import auth from '@react-native-firebase/auth';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {IUserLogin} from '../../screens/auth/auth.types';
+import {IAuthState, IUser} from './authSlice.types';
 
-interface IAuthState {
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  user: IUser | null;
-}
-
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  photo: string;
-}
+GoogleSignin.configure({
+  webClientId:
+    '205392024757-86s953d4elbupalakt5ginic3elj152a.apps.googleusercontent.com',
+});
 
 const initialState: IAuthState = {
   isAuthenticated: false,
   isLoading: false,
   user: null,
+  error: null,
 };
 
-export const login = createAsyncThunk('auth/login', async () => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/users/1');
-  const user = await response.json();
+export const loginWithEmailandPassword = createAsyncThunk<
+  IAuthState,
+  IUserLogin
+>('auth/login', async ({email, password}) => {
+  try {
+    if (email !== '' && password !== '') {
+      const {user} = await auth().signInWithEmailAndPassword(email, password);
 
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    photo: 'https://picsum.photos/id/2/200/300',
-  };
+      await user.updateProfile({
+        displayName: 'No Name',
+        photoURL: 'https://picsum.photos/200/200',
+      });
+
+      return {
+        user: {
+          uid: user.uid,
+          displayName: 'No Name',
+          email: user.email as string,
+          photoURL: 'https://picsum.photos/200/200',
+        },
+      } as IAuthState;
+    } else {
+      return {
+        error: 'Email and password are required',
+      } as IAuthState;
+    }
+  } catch (error) {
+    if (error.code === 'auth/wrong-password') {
+      return {
+        error: 'Wrong password',
+      } as IAuthState;
+    } else if (error.code === 'auth/user-not-found') {
+      return {
+        error: 'User not found',
+      } as IAuthState;
+    } else {
+      return {
+        error: error.message,
+      } as IAuthState;
+    }
+  }
 });
 
 const authSlice = createSlice({
@@ -38,18 +66,32 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
+    setError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+    },
+    clearError: state => {
+      state.error = null;
+    },
   },
   extraReducers: builder => {
-    builder.addCase(login.pending, state => {
+    builder.addCase(loginWithEmailandPassword.pending, state => {
       state.isLoading = true;
     });
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isAuthenticated = true;
-      state.user = action.payload;
+    builder.addCase(loginWithEmailandPassword.fulfilled, (state, action) => {
+      if (action.payload.user) {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+        state.error = null;
+      } else {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = action.payload.error;
+      }
     });
   },
 });
 
-export const {setUser} = authSlice.actions;
+export const {setUser, setError, clearError} = authSlice.actions;
 export default authSlice.reducer;

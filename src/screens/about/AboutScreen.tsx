@@ -5,7 +5,7 @@ import {useState} from 'react';
 import axios from 'axios';
 import {GithubUser} from './types';
 import styled from 'styled-components/native';
-import StyledBrandApp from '../../components/molecules/StyledBrandApp';
+import StyledBrandApp from '../../components/molecules/styledBrandApp/StyledBrandApp';
 
 const AboutScreen = () => {
   const [data, setData] = useState<GithubUser>({} as GithubUser);
