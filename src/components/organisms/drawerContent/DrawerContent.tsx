@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   DrawerItemList,
@@ -11,9 +11,27 @@ import {
   Title,
   Caption,
   Drawer,
+  Button,
 } from 'react-native-paper';
+import {RootState, useAppDispatch} from '../../../redux/store';
+import {signOut} from '../../../redux/slices/authSlice';
+import {useSelector} from 'react-redux';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
+  const dispatch = useAppDispatch();
+  const {isAuthenticated} = useSelector((state: RootState) => state.auth);
+
+  const logoutApp = () => {
+    dispatch(signOut());
+  };
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      props.navigation.navigate('Login');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
+
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContent}>
@@ -30,6 +48,15 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItemList {...props} />
         </Drawer.Section>
+        <Button
+          icon="logout"
+          // compact
+          uppercase={false}
+          mode="outlined"
+          style={styles.logoutButton}
+          onPress={logoutApp}>
+          Logout
+        </Button>
       </View>
     </DrawerContentScrollView>
   );
@@ -56,5 +83,11 @@ const styles = StyleSheet.create({
   },
   drawerSection: {
     marginTop: 15,
+  },
+  logoutButton: {
+    width: 180,
+    marginHorizontal: 20,
+    marginTop: 30,
+    alignSelf: 'center',
   },
 });

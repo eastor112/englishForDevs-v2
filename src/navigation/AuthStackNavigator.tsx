@@ -16,14 +16,17 @@ const AuthStackNavigator = () => {
   const [initializing, setInitializing] = useState(true);
 
   function onAuthStateChanged(user: any) {
-    dispatch(
-      setUser({
-        displayName: user.displayName,
-        email: user.email,
-        uid: user.uid,
-        photoURL: user.photoURL,
-      }),
-    );
+    if (user) {
+      dispatch(
+        setUser({
+          displayName: user.displayName,
+          email: user.email,
+          uid: user.uid,
+          photoURL: user.photoURL,
+        }),
+      );
+    }
+
     if (initializing) {
       setInitializing(false);
     }
@@ -31,7 +34,8 @@ const AuthStackNavigator = () => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+
+    return subscriber;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -46,13 +46,23 @@ const LoginScreen = ({navigation}: Props) => {
   const [showModal, setShowModal] = React.useState(false);
 
   const dispatch = useAppDispatch();
-  const {error: errorRedux} = useSelector((state: RootState) => state.auth);
+  const {error: errorRedux, isAuthenticated} = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const openModal = () => setShowModal(true);
   const closeModal = () => {
     dispatch(clearError());
     setShowModal(false);
   };
+
+  useEffect(() => {
+    if (isAuthenticated === true) {
+      navigation.navigate('MainMenu');
+    }
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (errorRedux) {

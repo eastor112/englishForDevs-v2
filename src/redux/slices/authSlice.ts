@@ -27,7 +27,6 @@ export const signUpWithEmailandPassword = createAsyncThunk(
       await user.updateProfile({displayName});
       await user.sendEmailVerification();
 
-      console.log('🚀 ~ file: authSlice.ts ~ line 24 ~ user', user);
       return {
         user: {
           uid: user.uid,
@@ -115,18 +114,35 @@ export const loginWithGoogle = createAsyncThunk<IAuthState, void>(
   },
 );
 
+export const signOut = createAsyncThunk('auth/signOut', async (_, thunkAPI) => {
+  try {
+    await auth().signOut();
+
+    thunkAPI.dispatch(logout());
+  } catch (error) {
+    thunkAPI.dispatch(logout());
+  }
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
+      state.isAuthenticated = true;
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
     clearError: state => {
       state.error = null;
+    },
+    logout: state => {
+      state.user = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      state.isLoading = false;
     },
   },
   extraReducers: builder => {
@@ -197,5 +213,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {setUser, setError, clearError} = authSlice.actions;
+export const {setUser, setError, clearError, logout} = authSlice.actions;
 export default authSlice.reducer;
