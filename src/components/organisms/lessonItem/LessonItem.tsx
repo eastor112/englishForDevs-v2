@@ -1,39 +1,59 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import storage from '@react-native-firebase/storage';
+import {ILesson} from '../../../screens/lessons/types';
 
 interface Props {
-  navigate: (screenName: string) => void;
+  lesson: ILesson;
+  last: boolean;
+  navigate: (screenName: string, {}) => void;
 }
 
-const LessonItem = ({navigate}: Props) => {
+const LessonItem = ({navigate, lesson, last}: Props) => {
+  const [img, setImg] = useState<string>('');
+
+  useEffect(() => {
+    storage()
+      .ref(lesson.image)
+      .getDownloadURL()
+      .then(url => {
+        setImg(url);
+      });
+  }, [lesson.image]);
+
   return (
     <>
       <View style={styles.lessonNameContainer}>
-        <Text>Lesson 1:</Text>
-        <Text style={styles.lessonName}>Git and GitHub</Text>
+        <Text>Lesson {lesson.lessonNumber}:</Text>
+        <Text style={styles.lessonName}>{lesson.name}</Text>
       </View>
 
       <View style={styles.containerLesson}>
         <TouchableOpacity
           style={styles.touchable}
-          onPress={() => navigate('Topics')}>
+          onPress={() => navigate('Topics', {lessonId: lesson.id})}>
           <View style={styles.subContainerLesson}>
-            <Image
-              style={styles.logoImage}
-              source={{
-                uri: 'https://www.muycomputer.com/wp-content/uploads/2015/03/GitHub1.jpg',
-              }}
-            />
+            {img !== '' && (
+              <Image
+                style={styles.logoImage}
+                source={{
+                  uri: img,
+                }}
+              />
+            )}
           </View>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.lessonSeparator}>
-        <View style={styles.dot} />
-        <View style={styles.dot} />
-        <View style={styles.dot} />
-      </View>
+      {last ? (
+        <View style={styles.whiteSpace} />
+      ) : (
+        <View style={styles.lessonSeparator}>
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+        </View>
+      )}
     </>
   );
 };
@@ -84,13 +104,17 @@ const styles = StyleSheet.create({
   },
   lessonSeparator: {
     alignSelf: 'center',
+    marginTop: 6,
   },
   dot: {
     width: 10,
     height: 10,
     backgroundColor: 'gray',
     borderRadius: 5,
-    margin: 4,
+    margin: 6,
+  },
+  whiteSpace: {
+    height: 30,
   },
 });
 

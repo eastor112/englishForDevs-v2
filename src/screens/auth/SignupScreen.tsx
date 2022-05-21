@@ -17,7 +17,7 @@ import {IUserSignUp} from './auth.types';
 import * as yup from 'yup';
 import {StyleSheet} from 'react-native';
 import {useAppDispatch} from '../../redux/store';
-import {signUpWithEmailandPassword} from '../../redux/slices/authSlice';
+import {signUpWithEmailandPassword} from '../../redux/slices/auth/authSlice';
 
 interface Props extends NativeStackScreenProps<any, any> {}
 

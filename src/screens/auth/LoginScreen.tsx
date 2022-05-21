@@ -23,8 +23,8 @@ import {RootState, useAppDispatch} from '../../redux/store';
 import {
   loginWithEmailandPassword,
   loginWithGoogle,
-} from '../../redux/slices/authSlice';
-import {clearError} from '../../redux/slices/authSlice';
+} from '../../redux/slices/auth/authSlice';
+import {clearError} from '../../redux/slices/auth/authSlice';
 import AuthErrorModal from '../../components/organisms/authErrorModal/AuthErrorModal';
 
 const loginValidationSchema = yup.object().shape({

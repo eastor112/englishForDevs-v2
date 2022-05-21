@@ -14,7 +14,7 @@ import {
   Button,
 } from 'react-native-paper';
 import {RootState, useAppDispatch} from '../../../redux/store';
-import {signOut} from '../../../redux/slices/authSlice';
+import {signOut} from '../../../redux/slices/auth/authSlice';
 import {useSelector} from 'react-redux';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
