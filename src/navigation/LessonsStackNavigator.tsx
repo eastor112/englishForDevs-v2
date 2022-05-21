@@ -3,8 +3,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TopicsScreen from '../screens/topics/TopicsScreen';
 import LessonsScreen from '../screens/lessons/LessonsScreen';
 import PracticeTopTabNavigator from './PracticeTopTabNavigator';
+import {ILesson} from '../screens/lessons/types';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Lessons: undefined;
+  Topics: {lesson: ILesson};
+  Practice: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const LessonsStackNavigator = () => {
   return (

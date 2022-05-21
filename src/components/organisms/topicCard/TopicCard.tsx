@@ -1,32 +1,48 @@
 import {View, StyleSheet, Image} from 'react-native';
 import {Text, Button} from 'react-native-paper';
-import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, {useEffect, useState} from 'react';
+import {ITopic} from '../../../screens/topics/TopicsScreen';
+import DifficultyStars from '../../molecules/difficultyStars/DifficultyStars';
+import storage from '@react-native-firebase/storage';
 
 interface Props {
+  topic: ITopic;
   navigate: (screenName: string) => void;
 }
 
-const TopicCard = ({navigate}: Props) => {
+const TopicCard = ({topic, navigate}: Props) => {
+  const [img, setImg] = useState<string>('');
+
+  useEffect(() => {
+    if (topic.image) {
+      storage()
+        .ref(topic.image)
+        .getDownloadURL()
+        .then(url => {
+          setImg(url);
+        });
+    }
+  }, [topic.image]);
+
   return (
     <View style={styles.topicContainer}>
       <View style={styles.topicImageContainer}>
-        <Image
-          source={{
-            uri: 'https://miro.medium.com/max/650/1*zzvdRmHGGXONZpuQ2FeqsQ.png',
-          }}
-          style={styles.topicImage}
-        />
+        {img !== '' && (
+          <Image
+            source={{
+              uri: img,
+            }}
+            style={styles.topicImage}
+          />
+        )}
       </View>
       <View style={styles.topicInfo}>
-        <Text style={styles.numberTopic}>Topic 1:</Text>
-        <Text style={styles.titleTopic}>Let's talk about git</Text>
-        <Text>Duration: 15 minutes</Text>
+        <Text style={styles.numberTopic}>Topic {topic.topicNumber}:</Text>
+        <Text style={styles.titleTopic}>{topic.title}</Text>
+        <Text>Duration: {topic.duration} minutes</Text>
         <Text>
           Dificult:
-          <Icon name="star" size={15} color="#00BFFF" />
-          <Icon name="star" size={15} color="#00BFFF" />
-          <Icon name="star" size={15} color="#00BFFF" />
+          <DifficultyStars difficulty={topic.difficulty} />
         </Text>
 
         <Button
@@ -61,17 +77,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 20,
-    padding: 5,
   },
   topicImage: {
     width: 100,
     height: 100,
+    resizeMode: 'stretch',
   },
   numberTopic: {
     fontWeight: 'bold',
   },
   titleTopic: {
-    fontSize: 20,
+    fontSize: 16,
   },
   button: {
     marginTop: 10,

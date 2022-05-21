@@ -1,30 +1,38 @@
-import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
+import {View, StyleSheet} from 'react-native';
+import {Text} from 'react-native-paper';
 import CircularProgress from 'react-native-circular-progress-indicator';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {ILesson} from '../../../screens/lessons/types';
 
-const LessonInfo = () => {
+interface Props {
+  lesson: ILesson;
+  numberTopics: number;
+}
+
+const LessonInfo = ({lesson, numberTopics}: Props) => {
   return (
     <View style={styles.lessonContainer}>
       <View style={styles.infoLesson}>
-        <Text style={styles.numberLesson}>{'>_ Lesson 1'}</Text>
+        <Text
+          style={
+            styles.numberLesson
+          }>{`>_ Lesson ${lesson.lessonNumber}`}</Text>
         <View style={styles.titleSection}>
-          <Icon name="github" size={30} color="#00c2cc" />
-          <Text style={styles.titleLesson}>Git and Github</Text>
+          <Text style={styles.titleLesson}>{lesson.name}</Text>
         </View>
-        <Text>Practice talking about repositories and collaborative work</Text>
+        <Text style={styles.description}>{lesson.description}</Text>
       </View>
       <View style={styles.progress}>
         <CircularProgress
-          value={1}
-          maxValue={5}
+          value={0}
+          maxValue={numberTopics}
           radius={50}
           duration={2000}
           progressValueColor={'#00c2cc'}
           title={'Topics'}
           titleColor={'black'}
           titleStyle={styles.progressTitle}
-          valueSuffix={'/5'}
+          valueSuffix={`/${numberTopics}`}
         />
       </View>
     </View>
@@ -52,6 +60,10 @@ const styles = StyleSheet.create({
   },
   titleLesson: {
     fontSize: 20,
+  },
+  description: {
+    fontSize: 12,
+    marginTop: 6,
   },
   numberLesson: {
     fontWeight: 'bold',

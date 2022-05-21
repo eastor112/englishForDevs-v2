@@ -16,7 +16,7 @@ const LessonsScreen = ({navigation}: Props) => {
   const [lessons, setLessons] = useState<ILesson[]>([]);
 
   useEffect(() => {
-    const testingFire = async () => {
+    const getLessons = async () => {
       const lessonsCollectionRef = firestore()
         .collection('lessons')
         .orderBy('lessonNumber', 'asc');
@@ -27,11 +27,10 @@ const LessonsScreen = ({navigation}: Props) => {
         lesson.id = doc.id;
         return lesson as ILesson;
       });
-      console.log(lessonsArray2);
       setLessons(lessonsArray2);
     };
 
-    testingFire();
+    getLessons();
   }, []);
 
   return (

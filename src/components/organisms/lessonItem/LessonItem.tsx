@@ -32,7 +32,7 @@ const LessonItem = ({navigate, lesson, last}: Props) => {
       <View style={styles.containerLesson}>
         <TouchableOpacity
           style={styles.touchable}
-          onPress={() => navigate('Topics', {lessonId: lesson.id})}>
+          onPress={() => navigate('Topics', {lesson})}>
           <View style={styles.subContainerLesson}>
             {img !== '' && (
               <Image
