@@ -3,8 +3,36 @@ import AppBar from '../../components/organisms/appBar/AppBar';
 import styled from 'styled-components/native';
 import {Button, Text} from 'react-native-paper';
 import {DrawerScreenProps} from '@react-navigation/drawer';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
 
-const PracticeModesScreen = ({navigation}: DrawerScreenProps<any, any>) => {
+interface Props extends DrawerScreenProps<any, any> {}
+
+const PracticeModesScreen = ({navigation}: Props) => {
+  const {activeTopic} = useSelector((state: RootState) => state.topics);
+  console.log(activeTopic);
+
+  // useEffect(() => {
+  //   const getTopic = async () => {
+  //     const topicRef = firestore()
+  //       .collection(`lessons/${route.params!.lessonId}/topics`)
+  //       .doc(route.params!.topicId);
+
+  //     const topicObj = await topicRef.get();
+
+  //     const topicData = topicObj.data();
+
+  //     if (topicData) {
+  //       topicData.id = topicObj.id;
+
+  //       setTopic(topicData as ITopic);
+  //     }
+  //   };
+
+  //   getTopic();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [route.params!.lessonId, route.params!.topicId]);
+
   return (
     <>
       <AppBar />

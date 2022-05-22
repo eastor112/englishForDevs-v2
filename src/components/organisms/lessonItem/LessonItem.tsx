@@ -2,16 +2,20 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import storage from '@react-native-firebase/storage';
-import {ILesson} from '../../../screens/lessons/types';
+
+import {useAppDispatch} from '../../../redux/store';
+import {setActiveLesson} from '../../../redux/slices/lessons/lessonsSlice';
+import {ILesson} from '../../../redux/slices/lessons/lessonsSlice.types';
 
 interface Props {
   lesson: ILesson;
   last: boolean;
-  navigate: (screenName: string, {}) => void;
+  navigate: (screenName: string) => void;
 }
 
 const LessonItem = ({navigate, lesson, last}: Props) => {
   const [img, setImg] = useState<string>('');
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     storage()
@@ -22,6 +26,11 @@ const LessonItem = ({navigate, lesson, last}: Props) => {
       });
   }, [lesson.image]);
 
+  const handleOnPress = () => {
+    dispatch(setActiveLesson(lesson));
+    navigate('Topics');
+  };
+
   return (
     <>
       <View style={styles.lessonNameContainer}>
@@ -30,9 +39,7 @@ const LessonItem = ({navigate, lesson, last}: Props) => {
       </View>
 
       <View style={styles.containerLesson}>
-        <TouchableOpacity
-          style={styles.touchable}
-          onPress={() => navigate('Topics', {lesson})}>
+        <TouchableOpacity style={styles.touchable} onPress={handleOnPress}>
           <View style={styles.subContainerLesson}>
             {img !== '' && (
               <Image
@@ -73,6 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
+    activeOpacity: 0.01,
   },
   containerLesson: {
     width: 180,

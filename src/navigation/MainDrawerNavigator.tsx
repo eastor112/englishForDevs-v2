@@ -9,7 +9,17 @@ import ReviewScreen from '../screens/review/ReviewScreen';
 import WordsPracticeStackNavigator from './WordsPracticeStackNavigator';
 import PhrasesPracticeStackNavigator from './PhrasesPracticeStackNavigator';
 
-const Drawer = createDrawerNavigator();
+export type RootDrawerParamList = {
+  Main: undefined;
+  About: undefined;
+  Settings: undefined;
+  Review: undefined;
+  WordsPracticeStack: undefined;
+  PhrasesPracticeStack: undefined;
+  Practice: undefined;
+};
+
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
 const MainDrawerNavigator = () => {
   return (

@@ -1,17 +1,20 @@
 import {View, StyleSheet, Image} from 'react-native';
 import {Text, Button} from 'react-native-paper';
 import React, {useEffect, useState} from 'react';
-import {ITopic} from '../../../screens/topics/TopicsScreen';
+
 import DifficultyStars from '../../molecules/difficultyStars/DifficultyStars';
 import storage from '@react-native-firebase/storage';
+import {ITopic} from '../../../redux/slices/topics/topicsSlice.types';
+import {useAppDispatch} from '../../../redux/store';
+import {setActiveTopic} from '../../../redux/slices/topics/topicsSlice';
 
 interface Props {
   topic: ITopic;
-  lessonId: string;
-  navigate: (screenName: string, params: {}) => void;
+  navigate: (screenName: string) => void;
 }
 
-const TopicCard = ({topic, lessonId, navigate}: Props) => {
+const TopicCard = ({topic, navigate}: Props) => {
+  const dispatch = useAppDispatch();
   const [img, setImg] = useState<string>('');
 
   useEffect(() => {
@@ -24,6 +27,11 @@ const TopicCard = ({topic, lessonId, navigate}: Props) => {
         });
     }
   }, [topic.image]);
+
+  const handleOnPress = () => {
+    dispatch(setActiveTopic(topic));
+    navigate('PracticeModes');
+  };
 
   return (
     <View style={styles.topicContainer}>
@@ -46,12 +54,7 @@ const TopicCard = ({topic, lessonId, navigate}: Props) => {
           <DifficultyStars difficulty={topic.difficulty} />
         </Text>
 
-        <Button
-          mode="contained"
-          onPress={() =>
-            navigate('PracticeModes', {topicId: topic.id, lessonId})
-          }
-          style={styles.button}>
+        <Button mode="contained" onPress={handleOnPress} style={styles.button}>
           start practice
         </Button>
       </View>
