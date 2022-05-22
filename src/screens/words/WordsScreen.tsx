@@ -1,3 +1,4 @@
+import {MaterialTopTabNavigationProp} from '@react-navigation/material-top-tabs';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
@@ -6,8 +7,14 @@ import InfoWordOrPhrase from '../../components/molecules/infoWordOrPhrase/InfoWo
 import Definitions from '../../components/organisms/definitions/Definitions';
 import MainWordOrPhrase from '../../components/organisms/mainWordOrPhrase/MainWordOrPhrase';
 import WordsTranslation from '../../components/organisms/wordsTranslation/WordsTranslation';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
 
-const WordsScreen = () => {
+interface Props
+  extends MaterialTopTabNavigationProp<any, any>,
+    NativeStackScreenProps<RootStackParamList, any> {}
+
+const WordsScreen = ({}: Props) => {
   return (
     <ViewContainer style={styles.viewContainer}>
       <View>

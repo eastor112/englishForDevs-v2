@@ -7,10 +7,11 @@ import storage from '@react-native-firebase/storage';
 
 interface Props {
   topic: ITopic;
-  navigate: (screenName: string) => void;
+  lessonId: string;
+  navigate: (screenName: string, params: {}) => void;
 }
 
-const TopicCard = ({topic, navigate}: Props) => {
+const TopicCard = ({topic, lessonId, navigate}: Props) => {
   const [img, setImg] = useState<string>('');
 
   useEffect(() => {
@@ -47,7 +48,9 @@ const TopicCard = ({topic, navigate}: Props) => {
 
         <Button
           mode="contained"
-          onPress={() => navigate('Practice')}
+          onPress={() =>
+            navigate('PracticeModes', {topicId: topic.id, lessonId})
+          }
           style={styles.button}>
           start practice
         </Button>

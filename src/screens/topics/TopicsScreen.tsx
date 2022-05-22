@@ -21,6 +21,7 @@ export interface ITopic {
   duration: number;
   difficulty: string;
   image: string;
+  words: FirebaseFirestoreTypes.DocumentReference[];
   phrases: FirebaseFirestoreTypes.DocumentReference[];
   status: string;
   publish: boolean;
@@ -34,7 +35,7 @@ const TopicsScreen = ({navigation, route}: Props) => {
   useEffect(() => {
     const getLessonTopics = async () => {
       const topicsCollectionRef = firestore()
-        .collection('lessons/' + lesson.id + '/topics')
+        .collection(`lessons/${lesson.id}/topics`)
         .orderBy('topicNumber', 'asc');
 
       const topicsArray = await topicsCollectionRef.get();
@@ -61,6 +62,7 @@ const TopicsScreen = ({navigation, route}: Props) => {
           topics.map(topic => (
             <TopicCard
               key={topic.id}
+              lessonId={lesson.id}
               topic={topic}
               navigate={navigation.navigate}
             />

@@ -6,6 +6,8 @@ import ConfigScreen from '../screens/config/ConfigScreen';
 import DrawerContent from '../components/organisms/drawerContent/DrawerContent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReviewScreen from '../screens/review/ReviewScreen';
+import WordsPracticeStackNavigator from './WordsPracticeStackNavigator';
+import PhrasesPracticeStackNavigator from './PhrasesPracticeStackNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -53,13 +55,26 @@ const MainDrawerNavigator = () => {
       />
 
       <Drawer.Screen
+        name="WordsPracticeStack"
+        component={WordsPracticeStackNavigator}
+        options={{
+          drawerItemStyle: {display: 'none'},
+        }}
+      />
+
+      <Drawer.Screen
+        name="PhrasesPracticeStack"
+        component={PhrasesPracticeStackNavigator}
+        options={{
+          drawerItemStyle: {display: 'none'},
+        }}
+      />
+
+      <Drawer.Screen
         name="Practice"
         component={ReviewScreen}
         options={{
           drawerItemStyle: {display: 'none'},
-          drawerIcon: ({color}) => (
-            <Ionicons name="settings-outline" size={22} color={color} />
-          ),
         }}
       />
     </Drawer.Navigator>

@@ -7,8 +7,9 @@ import {Dimensions} from 'react-native';
 import LessonItem from '../../components/organisms/lessonItem/LessonItem';
 import firestore from '@react-native-firebase/firestore';
 import {ILesson} from './types';
+import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
 
-interface Props extends NativeStackScreenProps<any, any> {}
+interface Props extends NativeStackScreenProps<RootStackParamList, 'Lessons'> {}
 
 const windowHeight = Dimensions.get('window').height;
 

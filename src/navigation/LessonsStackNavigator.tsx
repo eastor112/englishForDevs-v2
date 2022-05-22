@@ -2,13 +2,15 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TopicsScreen from '../screens/topics/TopicsScreen';
 import LessonsScreen from '../screens/lessons/LessonsScreen';
-import PracticeTopTabNavigator from './PracticeTopTabNavigator';
 import {ILesson} from '../screens/lessons/types';
+import PracticeModesScreen from '../screens/practiceModes/PracticeModesScreen';
 
 export type RootStackParamList = {
   Lessons: undefined;
   Topics: {lesson: ILesson};
-  Practice: undefined;
+  PracticeModes: {lessonId: string; topicId: string};
+  WordsPractice: undefined;
+  PhrasesPractice: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -21,7 +23,7 @@ const LessonsStackNavigator = () => {
       }}>
       <Stack.Screen name="Lessons" component={LessonsScreen} />
       <Stack.Screen name="Topics" component={TopicsScreen} />
-      <Stack.Screen name="Practice" component={PracticeTopTabNavigator} />
+      <Stack.Screen name="PracticeModes" component={PracticeModesScreen} />
     </Stack.Navigator>
   );
 };
