@@ -1,5 +1,5 @@
 import {List} from 'react-native-paper';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import SoundNoSound from '../../molecules/soundNoSound/SoundNoSound';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
@@ -13,6 +13,11 @@ const Definitions = ({data}: Props) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [data]);
+
   return (
     <List.Section title="Technical definition">
       <List.Accordion

@@ -29,10 +29,12 @@ const wordsSlice = createSlice({
       state.wordsRefs = action.payload;
     },
     nextIndex: state => {
-      state.index = state.index + 1;
+      if (state.index < state.wordsRefs.length - 1) {
+        state.index = state.index + 1;
+      }
     },
   },
 });
 
-export const {setWordsRefs} = wordsSlice.actions;
+export const {setWordsRefs, nextIndex} = wordsSlice.actions;
 export default wordsSlice.reducer;

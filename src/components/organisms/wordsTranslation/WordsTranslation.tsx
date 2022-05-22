@@ -1,6 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 import {List} from 'react-native-paper';
-import React from 'react';
+import React, {useEffect} from 'react';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
 import {ITranslation} from '../../../redux/slices/words/wordsSlice.types';
 
@@ -12,6 +12,10 @@ const WordsTranslation = ({data}: Props) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [data]);
 
   return (
     <List.Section>

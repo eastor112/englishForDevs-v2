@@ -10,13 +10,14 @@ import WordsTranslation from '../../components/organisms/wordsTranslation/WordsT
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../redux/store';
+import {RootState, useAppDispatch} from '../../redux/store';
 import {
   IWord,
   ITranslation,
   IDefinition,
 } from '../../redux/slices/words/wordsSlice.types';
 import {arrayObjectsOrder} from '../../utils/orderByOrderField';
+import {nextIndex} from '../../redux/slices/words/wordsSlice';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
@@ -24,6 +25,8 @@ interface Props
 
 const WordsScreen = ({}: Props) => {
   const {wordsRefs, index} = useSelector((state: RootState) => state.words);
+  const dispatch = useAppDispatch();
+
   const [data, setData] = useState<IWord | null>(null);
 
   useEffect(() => {
@@ -34,6 +37,14 @@ const WordsScreen = ({}: Props) => {
     }
     return () => {};
   }, [wordsRefs, index]);
+
+  const handleIKnow = () => {
+    dispatch(nextIndex());
+  };
+
+  const handleIDontKnow = () => {
+    dispatch(nextIndex());
+  };
 
   return (
     <ViewContainer style={styles.viewContainer}>
@@ -68,12 +79,12 @@ const WordsScreen = ({}: Props) => {
       </ViewScrollContainer>
 
       <ViewButtonsContainer>
-        <StyledTouchableLeft>
+        <StyledTouchableLeft onPress={handleIKnow}>
           <Text>I already know</Text>
           <Text>this word</Text>
         </StyledTouchableLeft>
 
-        <StyledTouchableRight>
+        <StyledTouchableRight onPress={handleIDontKnow}>
           <Text>I want to review</Text>
           <Text>this word</Text>
         </StyledTouchableRight>
