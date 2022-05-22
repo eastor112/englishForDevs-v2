@@ -2,11 +2,17 @@ import {View, StyleSheet} from 'react-native';
 import {List} from 'react-native-paper';
 import React from 'react';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
+import {ITranslation} from '../../../redux/slices/words/wordsSlice.types';
 
-const Translation = () => {
+interface Props {
+  data: ITranslation[];
+}
+
+const WordsTranslation = ({data}: Props) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
+
   return (
     <List.Section>
       <List.Accordion
@@ -17,26 +23,22 @@ const Translation = () => {
         right={() => <View />}
         expanded={expanded}
         onPress={handlePress}>
-        <List.Item
-          title="Cometer"
-          titleNumberOfLines={1}
-          titleStyle={styles.definitionTitle}
-          description="commit, make, foul"
-          left={props => <List.Icon {...props} icon="translate" />}
-        />
-        <List.Item
-          title="Confirmación"
-          titleNumberOfLines={1}
-          titleStyle={styles.definitionTitle}
-          description="Do, make, ask, be, cause, commit"
-          left={props => <List.Icon {...props} icon="translate" />}
-        />
+        {data?.map(translation => (
+          <List.Item
+            key={translation.order}
+            title={translation.spanish}
+            titleNumberOfLines={1}
+            titleStyle={styles.definitionTitle}
+            description={translation.synonyms}
+            left={props => <List.Icon {...props} icon="translate" />}
+          />
+        ))}
       </List.Accordion>
     </List.Section>
   );
 };
 
-export default Translation;
+export default WordsTranslation;
 
 const styles = StyleSheet.create({
   definitionTitle: {

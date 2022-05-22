@@ -18,7 +18,7 @@ const MainWordOrPhrase = ({isWord = true, content, pronuntiation}: Props) => {
         {isWord && <Pronunciation>[ {pronuntiation} ]</Pronunciation>}
       </ViewWords>
       <SoundContainer>
-        <SoundNoSound />
+        <SoundNoSound text={content} />
       </SoundContainer>
     </WordOrPhraseContainer>
   );

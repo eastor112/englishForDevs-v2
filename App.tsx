@@ -15,6 +15,10 @@ import {name as appName} from './app.json';
 import AuthStackNavigator from './src/navigation/AuthStackNavigator';
 import store from './src/redux/store';
 import {Provider as ReduxProvider} from 'react-redux';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']);
+LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 const App = () => {
   const [dark, setDark] = useState(true);

@@ -4,13 +4,26 @@ import styled from 'styled-components/native';
 import {Button, Text} from 'react-native-paper';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../redux/store';
+import {RootState, useAppDispatch} from '../../redux/store';
+import {StyleSheet} from 'react-native';
+import {setWordsRefs} from '../../redux/slices/words/wordsSlice';
 
 interface Props extends DrawerScreenProps<any, any> {}
 
 const PracticeModesScreen = ({navigation}: Props) => {
   const {activeTopic} = useSelector((state: RootState) => state.topics);
-  console.log(activeTopic);
+  const dispatch = useAppDispatch();
+
+  const handlerWordsModeSelected = () => {
+    if (activeTopic) {
+      dispatch(setWordsRefs(activeTopic.words));
+    }
+    navigation.navigate('WordsPracticeStack');
+  };
+
+  const handlerPhrasesModeSelected = () => {
+    navigation.navigate('PhrasesPracticeStack');
+  };
 
   // useEffect(() => {
   //   const getTopic = async () => {
@@ -39,8 +52,9 @@ const PracticeModesScreen = ({navigation}: Props) => {
       <ViewContainer>
         <TextInstruction>Select how you want practice</TextInstruction>
         <ModesContainer>
-          <ViewModeContainer>
+          <ViewModeContainer style={styles.modeContainer}>
             <ImageForCard
+              style={styles.imageForCard}
               source={{
                 uri: 'https://www.2gb.com/wp-content/uploads/sites/2/2021/09/Words-With-Kel-Richards-600x350.jpg',
               }}
@@ -51,15 +65,14 @@ const PracticeModesScreen = ({navigation}: Props) => {
               You will practice individual words related to the chosen topic.
               These words appear in the sentences.
             </TextDescriptionMode>
-            <Button
-              mode="contained"
-              onPress={() => navigation.navigate('WordsPracticeStack')}>
+            <Button mode="contained" onPress={handlerWordsModeSelected}>
               <Text> SELECT THIS MODE</Text>
             </Button>
           </ViewModeContainer>
 
           <ViewModeContainer>
             <ImageForCard
+              style={styles.imageForCard}
               source={{
                 uri: 'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2021/04/types-of-sentences.jpeg',
               }}
@@ -69,9 +82,7 @@ const PracticeModesScreen = ({navigation}: Props) => {
             <TextDescriptionMode>
               Practice complete sentences related to the selected topic.
             </TextDescriptionMode>
-            <Button
-              mode="contained"
-              onPress={() => navigation.navigate('PhrasesPracticeStack')}>
+            <Button mode="contained" onPress={handlerPhrasesModeSelected}>
               <Text> SELECT THIS MODE</Text>
             </Button>
           </ViewModeContainer>
@@ -82,6 +93,15 @@ const PracticeModesScreen = ({navigation}: Props) => {
 };
 
 export default PracticeModesScreen;
+
+const styles = StyleSheet.create({
+  modeContainer: {
+    elevation: 10,
+  },
+  imageForCard: {
+    resizeMode: 'stretch',
+  },
+});
 
 const TextInstruction = styled.Text`
   font-size: 18px;
@@ -99,7 +119,6 @@ const ModesContainer = styled.View`
 
 const ViewModeContainer = styled.View`
   border-radius: 10px;
-  elevation: 10;
   margin: 10px;
   margin-bottom: 10px;
   padding: 15px 25px;
@@ -110,7 +129,6 @@ const ViewModeContainer = styled.View`
 const ImageForCard = styled.Image`
   width: 100%;
   height: 100px;
-  resize-mode: stretch;
 `;
 
 const TextMode = styled(Text)`

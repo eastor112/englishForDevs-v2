@@ -1,5 +1,5 @@
 import {MaterialTopTabNavigationProp} from '@react-navigation/material-top-tabs';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import styled from 'styled-components/native';
@@ -9,30 +9,63 @@ import MainWordOrPhrase from '../../components/organisms/mainWordOrPhrase/MainWo
 import WordsTranslation from '../../components/organisms/wordsTranslation/WordsTranslation';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
+import {
+  IWord,
+  ITranslation,
+  IDefinition,
+} from '../../redux/slices/words/wordsSlice.types';
+import {arrayObjectsOrder} from '../../utils/orderByOrderField';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
     NativeStackScreenProps<RootStackParamList, any> {}
 
 const WordsScreen = ({}: Props) => {
+  const {wordsRefs, index} = useSelector((state: RootState) => state.words);
+  const [data, setData] = useState<IWord | null>(null);
+
+  useEffect(() => {
+    if (wordsRefs.length > 0) {
+      wordsRefs[index].get().then(doc => {
+        setData(doc.data() as IWord);
+      });
+    }
+    return () => {};
+  }, [wordsRefs, index]);
+
   return (
     <ViewContainer style={styles.viewContainer}>
       <View>
         <InfoWordOrPhrase />
 
         <ViewTopContainer>
-          <MainWordOrPhrase
-            isWord={true}
-            content="Commit"
-            pronuntiation="kəˈmit"
-          />
-
-          <ViewScrollContainer>
-            <WordsTranslation />
-            <Definitions />
-          </ViewScrollContainer>
+          {data && (
+            <MainWordOrPhrase
+              isWord={true}
+              content={data.word}
+              pronuntiation={data.pronuntiation}
+            />
+          )}
         </ViewTopContainer>
       </View>
+      <ViewScrollContainer>
+        {data && (
+          <>
+            <WordsTranslation
+              data={arrayObjectsOrder(data.translations) as ITranslation[]}
+            />
+          </>
+        )}
+        {data &&
+          data.definitions.map(definition => (
+            <Definitions
+              key={definition.order}
+              data={definition as IDefinition}
+            />
+          ))}
+      </ViewScrollContainer>
 
       <ViewButtonsContainer>
         <StyledTouchableLeft>

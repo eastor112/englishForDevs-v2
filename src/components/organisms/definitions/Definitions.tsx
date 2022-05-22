@@ -3,16 +3,20 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import SoundNoSound from '../../molecules/soundNoSound/SoundNoSound';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
+import {IDefinition} from '../../../redux/slices/words/wordsSlice.types';
 
-const Definitions = () => {
+interface Props {
+  data: IDefinition;
+}
+
+const Definitions = ({data}: Props) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
   return (
     <List.Section title="Technical definition">
       <List.Accordion
-        title="A commit is an operation that records changes to one or more files in your
-          branch."
+        title={data.english}
         titleNumberOfLines={4}
         titleStyle={styles.definitionTitle}
         left={props => <ViewNoView {...props} />}
@@ -22,10 +26,10 @@ const Definitions = () => {
         <List.Item
           title="Listen"
           description="Repeat after the speaker"
-          left={() => <SoundNoSound />}
+          left={() => <SoundNoSound text={data.english} />}
         />
         <List.Item
-          title="Una confirmación es una operación que registra cambios a uno o más archivos de una rama"
+          title={data.spanish}
           titleNumberOfLines={4}
           titleStyle={styles.definitionTitle}
           description="Traducción"
