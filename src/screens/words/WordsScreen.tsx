@@ -17,95 +17,210 @@ import {
   IDefinition,
 } from '../../redux/slices/words/wordsSlice.types';
 import {arrayObjectsOrder} from '../../utils/orderByOrderField';
-import {nextIndex} from '../../redux/slices/words/wordsSlice';
+import {
+  addWordResponse,
+  nextIndex,
+  prevIndex,
+} from '../../redux/slices/words/wordsSlice';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
     NativeStackScreenProps<RootStackParamList, any> {}
 
 const WordsScreen = ({}: Props) => {
-  const {wordsRefs, index} = useSelector((state: RootState) => state.words);
+  const {wordsRefs, index, wordsResponses} = useSelector(
+    (state: RootState) => state.words,
+  );
   const dispatch = useAppDispatch();
 
   const [data, setData] = useState<IWord | null>(null);
+  const [id, setId] = useState<string | null>(null);
 
   useEffect(() => {
     if (wordsRefs.length > 0) {
       wordsRefs[index].get().then(doc => {
         setData(doc.data() as IWord);
+        setId(doc.id);
       });
     }
     return () => {};
   }, [wordsRefs, index]);
 
   const handleIKnow = () => {
+    const date = new Date();
+
+    if (id) {
+      dispatch(
+        addWordResponse({
+          wordId: id,
+          date: date.toISOString(),
+          response: 'know',
+        }),
+      );
+    }
     dispatch(nextIndex());
   };
 
   const handleIDontKnow = () => {
+    const date = new Date();
+
+    if (id) {
+      dispatch(
+        addWordResponse({
+          wordId: id,
+          date: date.toISOString(),
+          response: 'dontKnow',
+        }),
+      );
+    }
+
+    dispatch(nextIndex());
+  };
+
+  const handlePrev = () => {
+    dispatch(prevIndex());
+  };
+  const handleNext = () => {
     dispatch(nextIndex());
   };
 
   return (
-    <ViewContainer style={styles.viewContainer}>
-      <View>
-        <InfoWordOrPhrase />
-
-        <ViewTopContainer>
-          {data && (
-            <MainWordOrPhrase
-              isWord={true}
-              content={data.word}
-              pronuntiation={data.pronuntiation}
-            />
-          )}
-        </ViewTopContainer>
-      </View>
-      <ViewScrollContainer>
-        {data && (
-          <>
-            <WordsTranslation
-              data={arrayObjectsOrder(data.translations) as ITranslation[]}
-            />
-          </>
+    <View style={styles.screenContainer}>
+      <View style={styles.actions}>
+        {index > 0 ? (
+          <TouchableOpacity style={styles.buttons} onPress={handlePrev}>
+            <Icon name="arrow-left-thick" color={'#00c2cc'} size={20} />
+            <Text>Back</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.placeHolder} />
         )}
-        {data &&
-          data.definitions.map(definition => (
-            <Definitions
-              key={definition.order}
-              data={definition as IDefinition}
-            />
-          ))}
-      </ViewScrollContainer>
 
-      <ViewButtonsContainer>
-        <StyledTouchableLeft onPress={handleIKnow}>
-          <Text>I already know</Text>
-          <Text>this word</Text>
-        </StyledTouchableLeft>
+        <View style={styles.stepsContainer}>
+          <Text style={styles.index}>{index + 1}</Text>
+          <Text style={styles.total}>/{wordsRefs.length}</Text>
+        </View>
 
-        <StyledTouchableRight onPress={handleIDontKnow}>
-          <Text>I want to review</Text>
-          <Text>this word</Text>
-        </StyledTouchableRight>
-      </ViewButtonsContainer>
-    </ViewContainer>
+        {index < wordsRefs.length - 1 ? (
+          <TouchableOpacity style={styles.buttons} onPress={handleNext}>
+            <Text>Next</Text>
+            <Icon name="arrow-right-thick" color={'#00c2cc'} size={20} />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.placeHolder} />
+        )}
+      </View>
+      <ViewContainer style={styles.viewContainer}>
+        <View>
+          <InfoWordOrPhrase />
+
+          <ViewTopContainer>
+            {data && (
+              <MainWordOrPhrase
+                isWord={true}
+                content={data.word}
+                pronuntiation={data.pronuntiation}
+              />
+            )}
+          </ViewTopContainer>
+        </View>
+        <ViewScrollContainer>
+          {data && (
+            <>
+              <WordsTranslation
+                data={arrayObjectsOrder(data.translations) as ITranslation[]}
+              />
+            </>
+          )}
+          {data &&
+            data.definitions.map(definition => (
+              <Definitions
+                key={definition.order}
+                data={definition as IDefinition}
+              />
+            ))}
+        </ViewScrollContainer>
+
+        <ViewButtonsContainer>
+          <StyledTouchableLeft
+            onPress={handleIKnow}
+            style={
+              wordsResponses.find(wr => wr.wordId === id)?.response ===
+                'know' && styles.buttonSelected
+            }>
+            <Text>I already know</Text>
+            <Text>this word</Text>
+          </StyledTouchableLeft>
+
+          <StyledTouchableRight
+            onPress={handleIDontKnow}
+            style={
+              wordsResponses.find(wr => wr.wordId === id)?.response ===
+                'dontKnow' && styles.buttonSelected
+            }>
+            <Text>I want to review</Text>
+            <Text>this word</Text>
+          </StyledTouchableRight>
+        </ViewButtonsContainer>
+      </ViewContainer>
+    </View>
   );
 };
 
 export default WordsScreen;
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+  },
+  actions: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  buttons: {
+    flexDirection: 'row',
+    width: 60,
+    activeOpacity: 0.9,
+  },
+  stepsContainer: {
+    width: 36,
+    height: 36,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#00c2cc',
+  },
+  index: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  total: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'gray',
+  },
+  placeHolder: {
+    width: 60,
+  },
   viewContainer: {
-    borderLeftWidth: 1,
+    borderWidth: 1,
     borderRadius: 10,
-    borderRightWidth: 1,
     borderColor: 'gray',
+  },
+  buttonSelected: {
+    backgroundColor: '#00c2cc33',
   },
 });
 
 const ViewContainer = styled.View`
-  margin: 10px 15px;
+  margin: 0px 15px 10px;
   flex: 1;
   justify-content: space-between;
   border-radius: 10px;

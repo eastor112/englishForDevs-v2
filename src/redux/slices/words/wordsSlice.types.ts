@@ -16,3 +16,9 @@ export interface ITranslation {
   spanish: string;
   synonyms: string;
 }
+
+export interface IWordResponse {
+  wordId: string;
+  date: string;
+  response: 'know' | 'dontKnow';
+}

@@ -1,4 +1,4 @@
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import React, {useEffect, useState} from 'react';
 import Tts from 'react-native-tts';
@@ -38,12 +38,27 @@ const SoundNoSound = ({text}: Props) => {
   return (
     <View>
       {sound ? (
-        <IconButton icon="stop" color="red" size={30} onPress={handleSound} />
+        <IconButton
+          style={styles.activeButton}
+          icon="stop"
+          color="red"
+          size={30}
+          onPress={handleSound}
+        />
       ) : (
-        <IconButton icon="volume-high" size={30} onPress={handleSound} />
+        <IconButton
+          style={sound ? styles.activeButton : null}
+          icon="volume-high"
+          size={30}
+          onPress={handleSound}
+        />
       )}
     </View>
   );
 };
 
 export default SoundNoSound;
+
+const styles = StyleSheet.create({
+  activeButton: {},
+});
