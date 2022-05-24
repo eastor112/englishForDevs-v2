@@ -1,11 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
-import {IWord, IWordResponse} from './wordsSlice.types';
+import {IWordResponse} from './wordsSlice.types';
 
 interface IWordsSliceState {
   wordsRefs: FirebaseFirestoreTypes.DocumentReference[];
-  words: IWord[];
-  activeWord: IWord | null;
   index: number;
   isLoading: boolean;
   wordsResponses: IWordResponse[];
@@ -15,8 +13,6 @@ interface IWordsSliceState {
 
 const initialState: IWordsSliceState = {
   wordsRefs: [],
-  words: [],
-  activeWord: null,
   index: 0,
   isLoading: false,
   wordsResponses: [],
@@ -59,11 +55,11 @@ const wordsSlice = createSlice({
       if (state.wordsResponses.length === state.wordsRefs.length) {
         state.isCompleted = true;
       }
-      console.log(state.isCompleted);
     },
     setIsReviewing: (state, action: PayloadAction<boolean>) => {
       state.isReviewing = action.payload;
     },
+    resetWordsState: () => initialState,
   },
 });
 
@@ -73,6 +69,7 @@ export const {
   prevIndex,
   addWordResponse,
   setIsReviewing,
+  resetWordsState,
 } = wordsSlice.actions;
 
 export default wordsSlice.reducer;

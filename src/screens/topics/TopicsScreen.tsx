@@ -9,6 +9,8 @@ import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {fetchAllTopics} from '../../redux/slices/topics/topicsSlice';
+import {resetWordsState} from '../../redux/slices/words/wordsSlice';
+import {useIsFocused} from '@react-navigation/native';
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'Topics'> {}
 
@@ -17,6 +19,8 @@ const windowHeight = Dimensions.get('window').height;
 const TopicsScreen = ({navigation}: Props) => {
   const {activeLesson} = useSelector((state: RootState) => state.lessons);
   const {topics} = useSelector((state: RootState) => state.topics);
+  const {wordsResponses} = useSelector((state: RootState) => state.words);
+  const isFocused = useIsFocused();
 
   const dispatch = useAppDispatch();
 
@@ -25,6 +29,12 @@ const TopicsScreen = ({navigation}: Props) => {
       dispatch(fetchAllTopics(activeLesson.id));
     }
   }, [dispatch, activeLesson]);
+
+  useEffect(() => {
+    if (isFocused && wordsResponses.length > 0) {
+      dispatch(resetWordsState());
+    }
+  }, [dispatch, isFocused, wordsResponses]);
 
   return (
     <View>

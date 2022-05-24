@@ -2,14 +2,19 @@ import React from 'react';
 import styled from 'styled-components/native';
 import {Text} from 'react-native-paper';
 
-const InfoWordOrPhrase = () => {
+interface Props {
+  type: string;
+  lesson: string;
+}
+
+const InfoWordOrPhrase = ({type, lesson}: Props) => {
   return (
     <ViewInfoContainer>
-      <TypeWord>New word</TypeWord>
+      <TypeWord>New {type}</TypeWord>
 
       <LessonWordContainer>
         <LessonWord>Lesson:</LessonWord>
-        <LessonName>Git and GitHub</LessonName>
+        <LessonName>{lesson}</LessonName>
       </LessonWordContainer>
     </ViewInfoContainer>
   );

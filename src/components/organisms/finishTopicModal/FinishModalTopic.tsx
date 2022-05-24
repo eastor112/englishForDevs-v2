@@ -19,6 +19,11 @@ interface Props {
 const FinishModalTopic = ({stats, setIsModalVisible, navigate}: Props) => {
   const dispatch = useAppDispatch();
 
+  const handleGoTopics = () => {
+    setIsModalVisible(false);
+    navigate('Topics');
+  };
+
   const handleSetReview = () => {
     dispatch(setIsReviewing(true));
     setIsModalVisible(false);
@@ -61,7 +66,7 @@ const FinishModalTopic = ({stats, setIsModalVisible, navigate}: Props) => {
           style={styles.buttons}
           mode="contained"
           uppercase={false}
-          onPress={() => navigate('Topics')}>
+          onPress={handleGoTopics}>
           Go to topics
         </Button>
       </View>

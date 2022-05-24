@@ -26,6 +26,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FinishModalTopic from '../../components/organisms/finishTopicModal/FinishModalTopic';
 import {countKnowOrDontknow} from '../../utils/countKnowOrUnknow';
+import Animated, {FadeIn} from 'react-native-reanimated';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
@@ -34,6 +35,8 @@ interface Props
 const WordsScreen = ({navigation}: Props) => {
   const {wordsRefs, index, wordsResponses, isCompleted, isReviewing} =
     useSelector((state: RootState) => state.words);
+  const {activeLesson} = useSelector((state: RootState) => state.lessons);
+
   const dispatch = useAppDispatch();
 
   const [data, setData] = useState<IWord | null>(null);
@@ -96,9 +99,11 @@ const WordsScreen = ({navigation}: Props) => {
 
   return (
     <Provider>
-      <View style={styles.screenContainer}>
+      <Animated.View
+        style={styles.screenContainer}
+        entering={FadeIn.duration(1000)}>
         <View style={styles.actions}>
-          {index > 0 ? (
+          {isReviewing && index > 0 ? (
             <TouchableOpacity style={styles.buttons} onPress={handlePrev}>
               <Icon name="arrow-left-thick" color={'#00c2cc'} size={20} />
               <Text>Back</Text>
@@ -112,7 +117,7 @@ const WordsScreen = ({navigation}: Props) => {
             <Text style={styles.total}>/{wordsRefs.length}</Text>
           </View>
 
-          {index < wordsRefs.length - 1 ? (
+          {isReviewing && index < wordsRefs.length - 1 ? (
             <TouchableOpacity style={styles.buttons} onPress={handleNext}>
               <Text>Next</Text>
               <Icon name="arrow-right-thick" color={'#00c2cc'} size={20} />
@@ -123,7 +128,9 @@ const WordsScreen = ({navigation}: Props) => {
         </View>
         <ViewContainer style={styles.viewContainer}>
           <View>
-            <InfoWordOrPhrase />
+            {activeLesson && (
+              <InfoWordOrPhrase type={'word'} lesson={activeLesson?.name} />
+            )}
 
             <ViewTopContainer>
               {data && (
@@ -198,7 +205,7 @@ const WordsScreen = ({navigation}: Props) => {
             />
           </Modal>
         </Portal>
-      </View>
+      </Animated.View>
     </Provider>
   );
 };
