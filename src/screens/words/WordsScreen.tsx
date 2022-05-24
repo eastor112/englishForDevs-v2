@@ -21,6 +21,7 @@ import {
   addWordResponse,
   nextIndex,
   prevIndex,
+  setIsReviewing,
 } from '../../redux/slices/words/wordsSlice';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -40,14 +41,14 @@ const WordsScreen = ({navigation}: Props) => {
   const dispatch = useAppDispatch();
 
   const [data, setData] = useState<IWord | null>(null);
-  const [id, setId] = useState<string | null>(null);
+  const [wordId, setWordId] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (wordsRefs.length > 0) {
       wordsRefs[index].get().then(doc => {
         setData(doc.data() as IWord);
-        setId(doc.id);
+        setWordId(doc.id);
       });
     }
     return () => {};
@@ -62,32 +63,35 @@ const WordsScreen = ({navigation}: Props) => {
   const handleIKnow = () => {
     const date = new Date();
 
-    if (id) {
+    if (wordId) {
       dispatch(
         addWordResponse({
-          wordId: id,
+          wordId: wordId,
           date: date.toISOString(),
           response: 'know',
         }),
       );
     }
-    dispatch(nextIndex());
+    if (!isReviewing) {
+      dispatch(nextIndex());
+    }
   };
 
   const handleIDontKnow = () => {
     const date = new Date();
 
-    if (id) {
+    if (wordId) {
       dispatch(
         addWordResponse({
-          wordId: id,
+          wordId: wordId,
           date: date.toISOString(),
           response: 'dontKnow',
         }),
       );
     }
-
-    dispatch(nextIndex());
+    if (!isReviewing) {
+      dispatch(nextIndex());
+    }
   };
 
   const handlePrev = () => {
@@ -163,7 +167,7 @@ const WordsScreen = ({navigation}: Props) => {
             <StyledTouchableLeft
               onPress={handleIKnow}
               style={
-                wordsResponses.find(wr => wr.wordId === id)?.response ===
+                wordsResponses.find(wr => wr.wordId === wordId)?.response ===
                   'know' && styles.buttonSelected
               }>
               <Text>I already know</Text>
@@ -173,7 +177,7 @@ const WordsScreen = ({navigation}: Props) => {
             <StyledTouchableRight
               onPress={handleIDontKnow}
               style={
-                wordsResponses.find(wr => wr.wordId === id)?.response ===
+                wordsResponses.find(wr => wr.wordId === wordId)?.response ===
                   'dontKnow' && styles.buttonSelected
               }>
               <Text>I want to review</Text>
@@ -199,8 +203,10 @@ const WordsScreen = ({navigation}: Props) => {
             dismissable={false}
             contentContainerStyle={styles.modalContainer}>
             <FinishModalTopic
+              isWord={true}
               navigate={navigation.navigate}
               stats={countKnowOrDontknow(wordsResponses)}
+              setIsReviewing={setIsReviewing}
               setIsModalVisible={setIsModalVisible}
             />
           </Modal>

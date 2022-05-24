@@ -1,12 +1,20 @@
 import {View, StyleSheet} from 'react-native';
 import {List} from 'react-native-paper';
-import React from 'react';
+import React, {useEffect} from 'react';
 import ViewNoView from '../../molecules/viewNoView/ViewNoView';
 
-const PhrasesTranslation = () => {
+interface Props {
+  text: string;
+}
+
+const PhrasesTranslation = ({text}: Props) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [text]);
 
   return (
     <List.Section>
@@ -19,7 +27,7 @@ const PhrasesTranslation = () => {
         expanded={expanded}
         onPress={handlePress}>
         <List.Item
-          title="Hey! realiza el commit con las nuevas características en la rama de desarrollo!"
+          title={text}
           titleNumberOfLines={4}
           titleStyle={styles.definitionTitle}
           description="Traducción"

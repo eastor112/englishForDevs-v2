@@ -1,54 +1,263 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components/native';
 import InfoWordOrPhrase from '../../components/molecules/infoWordOrPhrase/InfoWordOrPhrase';
 import MainWordOrPhrase from '../../components/organisms/mainWordOrPhrase/MainWordOrPhrase';
 import PhrasesTranslation from '../../components/organisms/phrasesTranslation/PhrasesTranslation';
 import WordByWord from '../../components/organisms/wordByWord/WordByWord';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MaterialTopTabNavigationProp} from '@react-navigation/material-top-tabs';
+import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
+import {RootState, useAppDispatch} from '../../redux/store';
+import {useSelector} from 'react-redux';
+import {IPhrase} from '../../redux/slices/phrases/phrasesSlice.types';
+import Animated, {FadeIn} from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Modal, Portal, Text, Provider, Button} from 'react-native-paper';
+import FinishModalTopic from '../../components/organisms/finishTopicModal/FinishModalTopic';
+import {countKnowOrDontknowPhrases} from '../../utils/countKnowOrUnknow';
+import {
+  addPhraseResponse,
+  nextPhraseIndex,
+  prevPhraseIndex,
+  setIsPhrasesReviewing,
+} from '../../redux/slices/phrases/phrasesSlice';
 
-const PhrasesScreen = () => {
+interface Props
+  extends MaterialTopTabNavigationProp<any, any>,
+    NativeStackScreenProps<RootStackParamList, any> {}
+
+const PhrasesScreen = ({navigation}: Props) => {
+  const {phrasesRefs, phraseIndex, phrasesResponses, isCompleted, isReviewing} =
+    useSelector((state: RootState) => state.phrases);
+  const {activeLesson} = useSelector((state: RootState) => state.lessons);
+
+  const dispatch = useAppDispatch();
+
+  const [data, setData] = useState<IPhrase | null>(null);
+  const [phraseId, setPhraseId] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (phrasesRefs.length > 0) {
+      phrasesRefs[phraseIndex].get().then(doc => {
+        setData(doc.data() as IPhrase);
+        setPhraseId(doc.id);
+      });
+    }
+    return () => {};
+  }, [phrasesRefs, phraseIndex]);
+
+  useEffect(() => {
+    if (isCompleted) {
+      setIsModalVisible(true);
+    }
+  }, [isCompleted]);
+
+  const handlePrev = () => {
+    dispatch(prevPhraseIndex());
+  };
+  const handleNext = () => {
+    dispatch(nextPhraseIndex());
+  };
+
+  const handleIKnow = () => {
+    const date = new Date();
+    if (phraseId) {
+      dispatch(
+        addPhraseResponse({
+          phraseId: phraseId,
+          date: date.toISOString(),
+          response: 'know',
+        }),
+      );
+    }
+    if (!isReviewing) {
+      dispatch(nextPhraseIndex());
+    }
+  };
+
+  const handleIDontKnow = () => {
+    const date = new Date();
+    if (phraseId) {
+      dispatch(
+        addPhraseResponse({
+          phraseId: phraseId,
+          date: date.toISOString(),
+          response: 'dontKnow',
+        }),
+      );
+    }
+    if (!isReviewing) {
+      dispatch(nextPhraseIndex());
+    }
+  };
+
   return (
-    <ViewContainer style={styles.viewContainer}>
-      <View>
-        <InfoWordOrPhrase />
+    <Provider>
+      <Animated.View
+        style={styles.screenContainer}
+        entering={FadeIn.duration(1000)}>
+        <View style={styles.actions}>
+          {isReviewing && phraseIndex > 0 ? (
+            <TouchableOpacity style={styles.buttons} onPress={handlePrev}>
+              <Icon name="arrow-left-thick" color={'#00c2cc'} size={20} />
+              <Text>Back</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.placeHolder} />
+          )}
 
-        <ViewTopContainer>
-          <MainWordOrPhrase
-            isWord={false}
-            content="Hey! commit the new features to the development branch!"
-          />
+          <View style={styles.stepsContainer}>
+            <Text style={styles.index}>{phraseIndex + 1}</Text>
+            <Text style={styles.total}>/{phrasesRefs.length}</Text>
+          </View>
 
+          {isReviewing && phraseIndex < phrasesRefs.length - 1 ? (
+            <TouchableOpacity style={styles.buttons} onPress={handleNext}>
+              <Text>Next</Text>
+              <Icon name="arrow-right-thick" color={'#00c2cc'} size={20} />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.placeHolder} />
+          )}
+        </View>
+
+        <ViewContainer>
+          <View>
+            {activeLesson && (
+              <InfoWordOrPhrase type="Phrase" lesson={activeLesson?.name} />
+            )}
+
+            <ViewTopContainer>
+              {data && (
+                <MainWordOrPhrase isWord={false} content={data?.phrase} />
+              )}
+            </ViewTopContainer>
+          </View>
           <ViewScrollContainer>
-            <PhrasesTranslation />
-            <WordByWord />
+            {data && <PhrasesTranslation text={data?.translation.spanish} />}
+
+            {data && <WordByWord wordsRef={data?.words} />}
           </ViewScrollContainer>
-        </ViewTopContainer>
-      </View>
 
-      <ViewButtonsContainer>
-        <StyledTouchableLeft>
-          <Text>I already know</Text>
-          <Text>this word</Text>
-        </StyledTouchableLeft>
+          <ViewButtonsContainer>
+            <StyledTouchableLeft
+              onPress={handleIKnow}
+              style={
+                phrasesResponses.find(wr => wr.phraseId === phraseId)
+                  ?.response === 'know' && styles.buttonSelected
+              }>
+              <Text>This phrase </Text>
+              <Text>is known</Text>
+            </StyledTouchableLeft>
 
-        <StyledTouchableRight>
-          <Text>I want to review</Text>
-          <Text>this word</Text>
-        </StyledTouchableRight>
-      </ViewButtonsContainer>
-    </ViewContainer>
+            <StyledTouchableRight
+              onPress={handleIDontKnow}
+              style={
+                phrasesResponses.find(wr => wr.phraseId === phraseId)
+                  ?.response === 'dontKnow' && styles.buttonSelected
+              }>
+              <Text>I want to review</Text>
+              <Text>this phrase</Text>
+            </StyledTouchableRight>
+          </ViewButtonsContainer>
+        </ViewContainer>
+
+        {isReviewing && (
+          <Button
+            icon="content-save-outline"
+            style={styles.floatButton}
+            uppercase={false}
+            mode="outlined"
+            onPress={() => navigation.navigate('Topics')}>
+            Finish
+          </Button>
+        )}
+
+        <Portal>
+          <Modal
+            visible={isModalVisible}
+            dismissable={false}
+            contentContainerStyle={styles.modalContainer}>
+            <FinishModalTopic
+              isWord={false}
+              navigate={navigation.navigate}
+              setIsReviewing={setIsPhrasesReviewing}
+              stats={countKnowOrDontknowPhrases(phrasesResponses)}
+              setIsModalVisible={setIsModalVisible}
+            />
+          </Modal>
+        </Portal>
+      </Animated.View>
+    </Provider>
   );
 };
 
 export default PhrasesScreen;
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+  },
+  actions: {
+    marginVertical: 2,
+    height: 44,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  buttons: {
+    flexDirection: 'row',
+    width: 60,
+    activeOpacity: 0.9,
+  },
+  stepsContainer: {
+    width: 36,
+    height: 36,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#00c2cc',
+  },
+  index: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  total: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  placeHolder: {
+    width: 60,
+  },
   viewContainer: {
-    borderLeftWidth: 1,
+    borderWidth: 1,
     borderRadius: 10,
-    borderRightWidth: 1,
     borderColor: 'gray',
+  },
+  buttonSelected: {
+    backgroundColor: '#00c2cc33',
+  },
+  floatButton: {
+    position: 'absolute',
+    top: 48,
+    right: 15,
+    width: 120,
+    padding: 2,
+    borderRadius: 0,
+    borderTopRightRadius: 10,
+    backgroundColor: '#00c2cc33',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    width: '90%',
+    alignSelf: 'center',
+    borderRadius: 10,
   },
 });
 

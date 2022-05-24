@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {StyleSheet} from 'react-native';
 import {setWordsRefs} from '../../redux/slices/words/wordsSlice';
+import {setPhrasesRefs} from '../../redux/slices/phrases/phrasesSlice';
 
 interface Props extends DrawerScreenProps<any, any> {}
 
@@ -22,29 +23,11 @@ const PracticeModesScreen = ({navigation}: Props) => {
   };
 
   const handlerPhrasesModeSelected = () => {
+    if (activeTopic) {
+      dispatch(setPhrasesRefs(activeTopic.phrases));
+    }
     navigation.navigate('PhrasesPracticeStack');
   };
-
-  // useEffect(() => {
-  //   const getTopic = async () => {
-  //     const topicRef = firestore()
-  //       .collection(`lessons/${route.params!.lessonId}/topics`)
-  //       .doc(route.params!.topicId);
-
-  //     const topicObj = await topicRef.get();
-
-  //     const topicData = topicObj.data();
-
-  //     if (topicData) {
-  //       topicData.id = topicObj.id;
-
-  //       setTopic(topicData as ITopic);
-  //     }
-  //   };
-
-  //   getTopic();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [route.params!.lessonId, route.params!.topicId]);
 
   return (
     <>

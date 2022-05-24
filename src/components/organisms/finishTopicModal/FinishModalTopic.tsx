@@ -3,11 +3,13 @@ import {Text, Button} from 'react-native-paper';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAppDispatch} from '../../../redux/store';
-import {setIsReviewing} from '../../../redux/slices/words/wordsSlice';
+import {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 
 interface Props {
+  isWord: boolean;
   navigate: any;
   setIsModalVisible: (bool: boolean) => void;
+  setIsReviewing: ActionCreatorWithPayload<boolean, string>;
   stats: {
     know: number;
     dontKnow: number;
@@ -16,7 +18,13 @@ interface Props {
   };
 }
 
-const FinishModalTopic = ({stats, setIsModalVisible, navigate}: Props) => {
+const FinishModalTopic = ({
+  isWord,
+  stats,
+  setIsModalVisible,
+  setIsReviewing,
+  navigate,
+}: Props) => {
   const dispatch = useAppDispatch();
 
   const handleGoTopics = () => {
@@ -43,12 +51,14 @@ const FinishModalTopic = ({stats, setIsModalVisible, navigate}: Props) => {
         <Text>You finished this lesson. This is the report:</Text>
         <View style={styles.stats}>
           <Text>
-            - Known words:{'    '} {stats.know} ({stats.knowPercent.toFixed(2)}
+            {isWord ? '- Known words:' : '- Known phrases'} {'      '}
+            {stats.know} ({stats.knowPercent.toFixed(2)}
             %)
           </Text>
           <Text>
-            - Unknown words: {stats.dontKnow} (
-            {stats.dontKnowPercent.toFixed(2)}
+            {isWord ? '- Unknown words:' : '- Unknown phrases:'}
+            {'  '}
+            {stats.dontKnow} ({stats.dontKnowPercent.toFixed(2)}
             %)
           </Text>
         </View>

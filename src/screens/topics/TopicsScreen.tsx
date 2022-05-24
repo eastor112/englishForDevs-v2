@@ -11,6 +11,7 @@ import {RootState, useAppDispatch} from '../../redux/store';
 import {fetchAllTopics} from '../../redux/slices/topics/topicsSlice';
 import {resetWordsState} from '../../redux/slices/words/wordsSlice';
 import {useIsFocused} from '@react-navigation/native';
+import {resetPhrasesState} from '../../redux/slices/phrases/phrasesSlice';
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'Topics'> {}
 
@@ -20,6 +21,7 @@ const TopicsScreen = ({navigation}: Props) => {
   const {activeLesson} = useSelector((state: RootState) => state.lessons);
   const {topics} = useSelector((state: RootState) => state.topics);
   const {wordsResponses} = useSelector((state: RootState) => state.words);
+  const {phrasesResponses} = useSelector((state: RootState) => state.phrases);
   const isFocused = useIsFocused();
 
   const dispatch = useAppDispatch();
@@ -31,10 +33,14 @@ const TopicsScreen = ({navigation}: Props) => {
   }, [dispatch, activeLesson]);
 
   useEffect(() => {
-    if (isFocused && wordsResponses.length > 0) {
+    if (
+      isFocused &&
+      (wordsResponses.length > 0 || phrasesResponses.length > 0)
+    ) {
       dispatch(resetWordsState());
+      dispatch(resetPhrasesState());
     }
-  }, [dispatch, isFocused, wordsResponses]);
+  }, [dispatch, isFocused, wordsResponses, phrasesResponses]);
 
   return (
     <View>
