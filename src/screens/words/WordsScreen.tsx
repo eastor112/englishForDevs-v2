@@ -1,7 +1,7 @@
 import {MaterialTopTabNavigationProp} from '@react-navigation/material-top-tabs';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Modal, Portal, Text, Provider, Button} from 'react-native-paper';
 import styled from 'styled-components/native';
 import InfoWordOrPhrase from '../../components/molecules/infoWordOrPhrase/InfoWordOrPhrase';
 import Definitions from '../../components/organisms/definitions/Definitions';
@@ -24,19 +24,21 @@ import {
 } from '../../redux/slices/words/wordsSlice';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FinishModalTopic from '../../components/organisms/finishTopicModal/FinishModalTopic';
+import {countKnowOrDontknow} from '../../utils/countKnowOrUnknow';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
     NativeStackScreenProps<RootStackParamList, any> {}
 
-const WordsScreen = ({}: Props) => {
-  const {wordsRefs, index, wordsResponses} = useSelector(
-    (state: RootState) => state.words,
-  );
+const WordsScreen = ({navigation}: Props) => {
+  const {wordsRefs, index, wordsResponses, isCompleted, isReviewing} =
+    useSelector((state: RootState) => state.words);
   const dispatch = useAppDispatch();
 
   const [data, setData] = useState<IWord | null>(null);
   const [id, setId] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (wordsRefs.length > 0) {
@@ -47,6 +49,12 @@ const WordsScreen = ({}: Props) => {
     }
     return () => {};
   }, [wordsRefs, index]);
+
+  useEffect(() => {
+    if (isCompleted) {
+      setIsModalVisible(true);
+    }
+  }, [isCompleted]);
 
   const handleIKnow = () => {
     const date = new Date();
@@ -87,85 +95,111 @@ const WordsScreen = ({}: Props) => {
   };
 
   return (
-    <View style={styles.screenContainer}>
-      <View style={styles.actions}>
-        {index > 0 ? (
-          <TouchableOpacity style={styles.buttons} onPress={handlePrev}>
-            <Icon name="arrow-left-thick" color={'#00c2cc'} size={20} />
-            <Text>Back</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.placeHolder} />
-        )}
-
-        <View style={styles.stepsContainer}>
-          <Text style={styles.index}>{index + 1}</Text>
-          <Text style={styles.total}>/{wordsRefs.length}</Text>
-        </View>
-
-        {index < wordsRefs.length - 1 ? (
-          <TouchableOpacity style={styles.buttons} onPress={handleNext}>
-            <Text>Next</Text>
-            <Icon name="arrow-right-thick" color={'#00c2cc'} size={20} />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.placeHolder} />
-        )}
-      </View>
-      <ViewContainer style={styles.viewContainer}>
-        <View>
-          <InfoWordOrPhrase />
-
-          <ViewTopContainer>
-            {data && (
-              <MainWordOrPhrase
-                isWord={true}
-                content={data.word}
-                pronuntiation={data.pronuntiation}
-              />
-            )}
-          </ViewTopContainer>
-        </View>
-        <ViewScrollContainer>
-          {data && (
-            <>
-              <WordsTranslation
-                data={arrayObjectsOrder(data.translations) as ITranslation[]}
-              />
-            </>
+    <Provider>
+      <View style={styles.screenContainer}>
+        <View style={styles.actions}>
+          {index > 0 ? (
+            <TouchableOpacity style={styles.buttons} onPress={handlePrev}>
+              <Icon name="arrow-left-thick" color={'#00c2cc'} size={20} />
+              <Text>Back</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.placeHolder} />
           )}
-          {data &&
-            data.definitions.map(definition => (
-              <Definitions
-                key={definition.order}
-                data={definition as IDefinition}
-              />
-            ))}
-        </ViewScrollContainer>
 
-        <ViewButtonsContainer>
-          <StyledTouchableLeft
-            onPress={handleIKnow}
-            style={
-              wordsResponses.find(wr => wr.wordId === id)?.response ===
-                'know' && styles.buttonSelected
-            }>
-            <Text>I already know</Text>
-            <Text>this word</Text>
-          </StyledTouchableLeft>
+          <View style={styles.stepsContainer}>
+            <Text style={styles.index}>{index + 1}</Text>
+            <Text style={styles.total}>/{wordsRefs.length}</Text>
+          </View>
 
-          <StyledTouchableRight
-            onPress={handleIDontKnow}
-            style={
-              wordsResponses.find(wr => wr.wordId === id)?.response ===
-                'dontKnow' && styles.buttonSelected
-            }>
-            <Text>I want to review</Text>
-            <Text>this word</Text>
-          </StyledTouchableRight>
-        </ViewButtonsContainer>
-      </ViewContainer>
-    </View>
+          {index < wordsRefs.length - 1 ? (
+            <TouchableOpacity style={styles.buttons} onPress={handleNext}>
+              <Text>Next</Text>
+              <Icon name="arrow-right-thick" color={'#00c2cc'} size={20} />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.placeHolder} />
+          )}
+        </View>
+        <ViewContainer style={styles.viewContainer}>
+          <View>
+            <InfoWordOrPhrase />
+
+            <ViewTopContainer>
+              {data && (
+                <MainWordOrPhrase
+                  isWord={true}
+                  content={data.word}
+                  pronuntiation={data.pronuntiation}
+                />
+              )}
+            </ViewTopContainer>
+          </View>
+          <ViewScrollContainer>
+            {data && (
+              <>
+                <WordsTranslation
+                  data={arrayObjectsOrder(data.translations) as ITranslation[]}
+                />
+              </>
+            )}
+            {data &&
+              data.definitions.map(definition => (
+                <Definitions
+                  key={definition.order}
+                  data={definition as IDefinition}
+                />
+              ))}
+          </ViewScrollContainer>
+
+          <ViewButtonsContainer>
+            <StyledTouchableLeft
+              onPress={handleIKnow}
+              style={
+                wordsResponses.find(wr => wr.wordId === id)?.response ===
+                  'know' && styles.buttonSelected
+              }>
+              <Text>I already know</Text>
+              <Text>this word</Text>
+            </StyledTouchableLeft>
+
+            <StyledTouchableRight
+              onPress={handleIDontKnow}
+              style={
+                wordsResponses.find(wr => wr.wordId === id)?.response ===
+                  'dontKnow' && styles.buttonSelected
+              }>
+              <Text>I want to review</Text>
+              <Text>this word</Text>
+            </StyledTouchableRight>
+          </ViewButtonsContainer>
+        </ViewContainer>
+
+        {isReviewing && (
+          <Button
+            icon="content-save-outline"
+            style={styles.floatButton}
+            uppercase={false}
+            mode="outlined"
+            onPress={() => navigation.navigate('Topics')}>
+            Finish
+          </Button>
+        )}
+
+        <Portal>
+          <Modal
+            visible={isModalVisible}
+            dismissable={false}
+            contentContainerStyle={styles.modalContainer}>
+            <FinishModalTopic
+              navigate={navigation.navigate}
+              stats={countKnowOrDontknow(wordsResponses)}
+              setIsModalVisible={setIsModalVisible}
+            />
+          </Modal>
+        </Portal>
+      </View>
+    </Provider>
   );
 };
 
@@ -176,7 +210,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   actions: {
-    height: 40,
+    marginVertical: 2,
+    height: 44,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -204,7 +239,6 @@ const styles = StyleSheet.create({
   total: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: 'gray',
   },
   placeHolder: {
     width: 60,
@@ -216,6 +250,23 @@ const styles = StyleSheet.create({
   },
   buttonSelected: {
     backgroundColor: '#00c2cc33',
+  },
+  floatButton: {
+    position: 'absolute',
+    top: 48,
+    right: 15,
+    width: 120,
+    padding: 2,
+    borderRadius: 0,
+    borderTopRightRadius: 10,
+    backgroundColor: '#00c2cc33',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    width: '90%',
+    alignSelf: 'center',
+    borderRadius: 10,
   },
 });
 

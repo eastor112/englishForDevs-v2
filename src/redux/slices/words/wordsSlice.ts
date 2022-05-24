@@ -9,6 +9,8 @@ interface IWordsSliceState {
   index: number;
   isLoading: boolean;
   wordsResponses: IWordResponse[];
+  isCompleted: boolean;
+  isReviewing: boolean;
 }
 
 const initialState: IWordsSliceState = {
@@ -18,6 +20,8 @@ const initialState: IWordsSliceState = {
   index: 0,
   isLoading: false,
   wordsResponses: [],
+  isCompleted: false,
+  isReviewing: false,
 };
 
 const wordsSlice = createSlice({
@@ -51,12 +55,24 @@ const wordsSlice = createSlice({
       } else {
         state.wordsResponses.push(action.payload);
       }
-      console.log(state.wordsResponses);
+
+      if (state.wordsResponses.length === state.wordsRefs.length) {
+        state.isCompleted = true;
+      }
+      console.log(state.isCompleted);
+    },
+    setIsReviewing: (state, action: PayloadAction<boolean>) => {
+      state.isReviewing = action.payload;
     },
   },
 });
 
-export const {setWordsRefs, nextIndex, prevIndex, addWordResponse} =
-  wordsSlice.actions;
+export const {
+  setWordsRefs,
+  nextIndex,
+  prevIndex,
+  addWordResponse,
+  setIsReviewing,
+} = wordsSlice.actions;
 
 export default wordsSlice.reducer;
