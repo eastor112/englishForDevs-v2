@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
 });
 
 const ViewContainer = styled.View`
-  margin: 10px 15px;
+  margin: 0px 10px 15px;
   flex: 1;
   justify-content: space-between;
   border-radius: 10px;

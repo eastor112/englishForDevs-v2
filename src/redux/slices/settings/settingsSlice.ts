@@ -1,8 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface ISettingsState {
-  darkTheme?: Boolean;
-  notifications?: Boolean;
+  darkTheme: boolean;
+  notifications?: boolean;
   timeToStudy?: string;
 }
 
@@ -16,10 +16,11 @@ const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setDarkTheme: (state, action: PayloadAction<Boolean>) => {
+    setDarkTheme: (state, action: PayloadAction<boolean>) => {
       state.darkTheme = action.payload;
     },
   },
 });
 
+export const {setDarkTheme} = settingsSlice.actions;
 export default settingsSlice.reducer;

@@ -3,7 +3,10 @@ import {Text, Switch, Button} from 'react-native-paper';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 import styled from 'styled-components/native';
 import DatePicker from 'react-native-date-picker';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState, useAppDispatch} from '../../redux/store';
+import {setDarkTheme} from '../../redux/slices/settings/settingsSlice';
 
 function formatAMPM(date: Date) {
   const hours = date.getHours();
@@ -18,11 +21,18 @@ function formatAMPM(date: Date) {
 }
 
 const ConfigScreen = () => {
-  const [isDark, setIsDark] = useState(false);
+  const {darkTheme} = useSelector((state: RootState) => state.settings);
+  const dispatch = useAppDispatch();
+
   const [activeNotifications, setActiveNotifications] = useState(true);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const onToggleSwitch = () => setIsDark(!isDark);
+
+  const onToggleSwitch = () => {
+    dispatch(setDarkTheme(!darkTheme));
+  };
+
+  console.log(darkTheme);
 
   return (
     <ViewContainer>
@@ -34,9 +44,9 @@ const ConfigScreen = () => {
         <SettingContainer>
           <SettingName>Dark Theme</SettingName>
           <Switch
-            value={isDark}
+            value={darkTheme}
             onValueChange={onToggleSwitch}
-            color={'#00c2cc'}
+            color="#00c2cc"
           />
         </SettingContainer>
 
@@ -63,7 +73,7 @@ const ConfigScreen = () => {
       <DatePicker
         modal
         mode="time"
-        style={{width: 200}}
+        style={styles.datePicker}
         open={open}
         date={date}
         onDateChange={dateProp => setDate(dateProp)}
@@ -80,6 +90,12 @@ const ConfigScreen = () => {
 };
 
 export default ConfigScreen;
+
+const styles = StyleSheet.create({
+  datePicker: {
+    width: 200,
+  },
+});
 
 const ViewContainer = styled.View`
   padding: 20px;
