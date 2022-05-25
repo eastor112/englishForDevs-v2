@@ -2,8 +2,10 @@ import {StyleSheet, View} from 'react-native';
 import {Text, Button} from 'react-native-paper';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useAppDispatch} from '../../../redux/store';
+import {useAppDispatch, RootState} from '../../../redux/store';
 import {ActionCreatorWithPayload} from '@reduxjs/toolkit';
+import {updateUserWordsResponses} from '../../../redux/slices/auth/authSlice';
+import {useSelector} from 'react-redux';
 
 interface Props {
   isWord: boolean;
@@ -26,8 +28,10 @@ const FinishModalTopic = ({
   navigate,
 }: Props) => {
   const dispatch = useAppDispatch();
+  const {wordsResponses} = useSelector((state: RootState) => state.words);
 
   const handleGoTopics = () => {
+    dispatch(updateUserWordsResponses(wordsResponses));
     setIsModalVisible(false);
     navigate('Topics');
   };

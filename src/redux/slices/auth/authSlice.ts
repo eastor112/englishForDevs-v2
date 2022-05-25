@@ -4,6 +4,8 @@ import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {IUserSignUp, IUserLogin} from '../../../screens/auth/auth.types';
 import {IAuthState, IUser, IUserData} from './authSlice.types';
+import {RootState} from '../../store';
+import {IWordResponse} from '../words/wordsSlice.types';
 
 GoogleSignin.configure({
   webClientId:
@@ -159,6 +161,58 @@ export const signOut = createAsyncThunk('auth/signOut', async (_, thunkAPI) => {
   }
 });
 
+export const updateUserWordsResponses = createAsyncThunk(
+  'auth/updateUserWordsResponses',
+  async (responses: IWordResponse[], {getState}) => {
+    const {
+      auth: {user, userData},
+    } = getState() as RootState;
+
+    if (userData?.wordsResponses) {
+      const updatedWordsResponses = userData?.wordsResponses.map(wr => {
+        const existWord = responses.find(r => r.wordId === wr.wordId);
+
+        if (existWord) {
+          return existWord;
+        }
+
+        return wr;
+      });
+
+      const newWordResponses = responses.filter(
+        res =>
+          !userData?.wordsResponses.some(
+            (wr: IWordResponse) => wr.wordId === res.wordId,
+          ),
+      );
+
+      const userDocument = firestore().collection('users').doc(user!.uid);
+
+      await userDocument.update({
+        wordsResponses: [...updatedWordsResponses, ...newWordResponses],
+      });
+
+      return {
+        userData: {
+          wordsResponses: [...updatedWordsResponses, ...newWordResponses],
+        },
+      } as IAuthState;
+    }
+
+    const userDocument = firestore().collection('users').doc(user!.uid);
+
+    await userDocument.set({
+      wordsResponses: responses,
+    } as IUserData);
+
+    return {
+      userData: {
+        wordsResponses: responses,
+      },
+    } as IAuthState;
+  },
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
@@ -251,6 +305,15 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.error = null;
+    });
+
+    builder.addCase(updateUserWordsResponses.pending, state => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(updateUserWordsResponses.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userData = action.payload.userData;
     });
   },
 });

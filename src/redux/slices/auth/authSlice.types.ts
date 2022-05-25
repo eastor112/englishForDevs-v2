@@ -1,9 +1,11 @@
+import {IWordResponse} from '../words/wordsSlice.types';
+
 export interface IAuthState {
   isAuthenticated?: boolean;
-  isLoading?: boolean;
-  user?: IUser | null;
-  userData?: IUserData | null;
-  error?: string | null;
+  isLoading: boolean;
+  user: IUser | null;
+  userData: IUserData | null;
+  error: string | null;
 }
 
 export interface IUser {
@@ -14,18 +16,10 @@ export interface IUser {
 }
 
 export type IUserData = {
-  wordsResponses?: WordResponse[];
-  phraseResponses?: PhraseResponse[];
-  lessonsCompleted?: LessonsCompleted[];
-  topicsCompleted?: TopicsCompleted[];
-};
-
-export type WordResponse = {
-  topicId: string;
-  lessonId: string;
-  wordId: string;
-  response: 'know' | 'dontKnow' | 'notAttempted';
-  date: string;
+  wordsResponses: IWordResponse[];
+  phraseResponses: PhraseResponse[];
+  lessonsCompleted: LessonsCompleted[];
+  topicsCompleted: TopicsCompleted[];
 };
 
 export type PhraseResponse = {

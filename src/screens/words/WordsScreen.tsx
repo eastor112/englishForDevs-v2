@@ -30,6 +30,7 @@ import {countKnowOrDontknow} from '../../utils/countKnowOrUnknow';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import {useTheme} from '@react-navigation/native';
 import {customDarkTheme, customDefaultTheme} from '../../Index';
+import {updateUserWordsResponses} from '../../redux/slices/auth/authSlice';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
@@ -40,6 +41,7 @@ const WordsScreen = ({navigation}: Props) => {
   const {wordsRefs, index, wordsResponses, isCompleted, isReviewing} =
     useSelector((state: RootState) => state.words);
   const {activeLesson} = useSelector((state: RootState) => state.lessons);
+  const {activeTopic} = useSelector((state: RootState) => state.topics);
 
   const dispatch = useAppDispatch();
 
@@ -69,6 +71,8 @@ const WordsScreen = ({navigation}: Props) => {
     if (wordId) {
       dispatch(
         addWordResponse({
+          topicId: activeLesson!.id,
+          lessonId: activeTopic!.id,
           wordId: wordId,
           date: date.toISOString(),
           response: 'know',
@@ -86,6 +90,8 @@ const WordsScreen = ({navigation}: Props) => {
     if (wordId) {
       dispatch(
         addWordResponse({
+          topicId: activeLesson!.id,
+          lessonId: activeTopic!.id,
           wordId: wordId,
           date: date.toISOString(),
           response: 'dontKnow',
@@ -100,8 +106,14 @@ const WordsScreen = ({navigation}: Props) => {
   const handlePrev = () => {
     dispatch(prevIndex());
   };
+
   const handleNext = () => {
     dispatch(nextIndex());
+  };
+
+  const handleSaveAndGoTopicScreen = () => {
+    dispatch(updateUserWordsResponses(wordsResponses));
+    navigation.navigate('Topics');
   };
 
   return (
@@ -196,7 +208,7 @@ const WordsScreen = ({navigation}: Props) => {
             style={styles.floatButton}
             uppercase={false}
             mode="outlined"
-            onPress={() => navigation.navigate('Topics')}>
+            onPress={handleSaveAndGoTopicScreen}>
             Finish
           </Button>
         )}

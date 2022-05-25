@@ -18,7 +18,9 @@ export interface ITranslation {
 }
 
 export interface IWordResponse {
+  lessonId: string;
+  topicId: string;
   wordId: string;
-  date: string;
   response: 'know' | 'dontKnow';
+  date: string;
 }
