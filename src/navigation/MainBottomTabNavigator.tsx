@@ -1,5 +1,6 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import React from 'react';
+import {useTheme} from 'react-native-paper';
 import ReviewModes from '../screens/reviewModes/ReviewModes';
 import StatsScreen from '../screens/stats/StatsScreen';
 import LessonsStackNavigator from './LessonsStackNavigator';
@@ -7,11 +8,13 @@ import LessonsStackNavigator from './LessonsStackNavigator';
 const Tab = createMaterialBottomTabNavigator();
 
 const MainBottomTabNavigator = () => {
+  const {colors, dark} = useTheme();
+
   return (
     <Tab.Navigator
       initialRouteName="LessonsNav"
-      activeColor="#f0edf6"
-      inactiveColor="#3e2465">
+      activeColor={dark ? '#00c2cc' : '#fff'}
+      inactiveColor={colors.text}>
       <Tab.Screen
         name="LessonsNav"
         component={LessonsStackNavigator}

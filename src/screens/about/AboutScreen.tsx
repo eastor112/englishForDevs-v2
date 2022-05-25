@@ -1,5 +1,5 @@
 import {Linking} from 'react-native';
-import {Text, Button} from 'react-native-paper';
+import {Text, Button, useTheme} from 'react-native-paper';
 import React, {useEffect} from 'react';
 import {useState} from 'react';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import StyledBrandApp from '../../components/molecules/styledBrandApp/StyledBran
 
 const AboutScreen = () => {
   const [data, setData] = useState<GithubUser>({} as GithubUser);
+  const {colors} = useTheme();
 
   useEffect(() => {
     axios.get('https://api.github.com/users/eastor112').then(res => {
@@ -17,7 +18,7 @@ const AboutScreen = () => {
   }, []);
 
   return (
-    <ViewContainer>
+    <ViewContainer color={colors.background}>
       <ViewAppInfoContainer>
         <StyledBrandApp />
         <ViewAppInfo>
@@ -70,9 +71,9 @@ const AboutScreen = () => {
 
 export default AboutScreen;
 
-const ViewContainer = styled.View`
+const ViewContainer = styled.View<{color: string}>`
   flex: 1;
-  background-color: #fff;
+  background-color: ${props => props.color};
   align-items: center;
   justify-content: center;
   padding: 30px;

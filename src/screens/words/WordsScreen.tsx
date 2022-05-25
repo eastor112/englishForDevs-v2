@@ -28,12 +28,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FinishModalTopic from '../../components/organisms/finishTopicModal/FinishModalTopic';
 import {countKnowOrDontknow} from '../../utils/countKnowOrUnknow';
 import Animated, {FadeIn} from 'react-native-reanimated';
+import {useTheme} from '@react-navigation/native';
+import {customDarkTheme, customDefaultTheme} from '../../Index';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
     NativeStackScreenProps<RootStackParamList, any> {}
 
 const WordsScreen = ({navigation}: Props) => {
+  const {dark} = useTheme();
   const {wordsRefs, index, wordsResponses, isCompleted, isReviewing} =
     useSelector((state: RootState) => state.words);
   const {activeLesson} = useSelector((state: RootState) => state.lessons);
@@ -102,7 +105,7 @@ const WordsScreen = ({navigation}: Props) => {
   };
 
   return (
-    <Provider>
+    <Provider theme={dark ? customDarkTheme : customDefaultTheme}>
       <Animated.View
         style={styles.screenContainer}
         entering={FadeIn.duration(1000)}>
@@ -130,6 +133,7 @@ const WordsScreen = ({navigation}: Props) => {
             <View style={styles.placeHolder} />
           )}
         </View>
+
         <ViewContainer style={styles.viewContainer}>
           <View>
             {activeLesson && (
@@ -201,7 +205,9 @@ const WordsScreen = ({navigation}: Props) => {
           <Modal
             visible={isModalVisible}
             dismissable={false}
-            contentContainerStyle={styles.modalContainer}>
+            contentContainerStyle={
+              dark ? styles.modalContainerDark : styles.modalContainer
+            }>
             <FinishModalTopic
               isWord={true}
               navigate={navigation.navigate}
@@ -275,7 +281,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#00c2cc33',
   },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#eee',
+    padding: 20,
+    width: '90%',
+    alignSelf: 'center',
+    borderRadius: 10,
+  },
+  modalContainerDark: {
+    backgroundColor: '#444444',
     padding: 20,
     width: '90%',
     alignSelf: 'center',

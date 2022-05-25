@@ -45,8 +45,9 @@ const TopicsScreen = ({navigation}: Props) => {
   return (
     <View>
       <AppBar />
-
-      <LessonInfo lesson={activeLesson} numberTopics={topics.length} />
+      {activeLesson && (
+        <LessonInfo lesson={activeLesson} numberTopics={topics.length} />
+      )}
       <ScrollView style={styles.scrollContainer}>
         {topics &&
           activeLesson &&

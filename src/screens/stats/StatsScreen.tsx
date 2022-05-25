@@ -4,13 +4,18 @@ import LearnedWordsChart from '../../components/organisms/learnedWordsChart/Lear
 import AppBar from '../../components/organisms/appBar/AppBar';
 import styled from 'styled-components/native';
 import StatisticsNumbers from '../../components/organisms/statisticsNumbers/StatisticsNumbers';
+import {RootState} from '../../redux/store';
+import {useSelector} from 'react-redux';
+import {formatDisplayUserName} from '../../utils/displayUserName';
 
 const StatsScreen = () => {
+  const {user} = useSelector((state: RootState) => state.auth);
+
   return (
     <>
       <AppBar />
       <ViewContainer>
-        <GreetText>Hello Emerson!</GreetText>
+        <GreetText>Hello {formatDisplayUserName(user?.displayName)}!</GreetText>
         <InfoText>Here you can check your progress. Remember:</InfoText>
 
         <ViewMotivationalPhrase>

@@ -32,8 +32,6 @@ const ConfigScreen = () => {
     dispatch(setDarkTheme(!darkTheme));
   };
 
-  console.log(darkTheme);
-
   return (
     <ViewContainer>
       <ViewTitle>

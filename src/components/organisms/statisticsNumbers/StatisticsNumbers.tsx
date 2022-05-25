@@ -1,30 +1,32 @@
-import {View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
 import React from 'react';
 import styled from 'styled-components/native';
 
 const StatisticsNumbers = () => {
+  const {dark} = useTheme();
+
   return (
     <View>
       <Title>These stats are the result of your effort:</Title>
 
       <ViewStatsContainer>
-        <ViewStatContainer>
+        <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
           <NumberStat>475</NumberStat>
           <SpanText>Practiced words</SpanText>
         </ViewStatContainer>
 
-        <ViewStatContainer>
+        <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
           <NumberStat>320</NumberStat>
           <SpanText>New learned words</SpanText>
         </ViewStatContainer>
 
-        <ViewStatContainer>
+        <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
           <NumberStat>120</NumberStat>
           <SpanText>Practiced phrases</SpanText>
         </ViewStatContainer>
 
-        <ViewStatContainer>
+        <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
           <NumberStat>15 w/d</NumberStat>
           <SpanText>Learning Rate</SpanText>
         </ViewStatContainer>
@@ -34,6 +36,12 @@ const StatisticsNumbers = () => {
 };
 
 export default StatisticsNumbers;
+
+const styles = StyleSheet.create({
+  viewStatContainer: {
+    elevation: 5,
+  },
+});
 
 const Title = styled(Text)`
   font-weight: bold;
@@ -47,16 +55,15 @@ const ViewStatsContainer = styled.View`
   margin-bottom: 5px;
 `;
 
-const ViewStatContainer = styled.View`
+const ViewStatContainer = styled.View<{dark: boolean}>`
   margin: 5px;
   margin-bottom: 10px;
   align-items: center;
   justify-content: center;
   width: 46%;
-  background-color: white;
+  background-color: ${({dark}) => (dark ? '#66666666' : '#eee')};
   border-radius: 10px;
   padding: 10px;
-  elevation: 5;
 `;
 
 const SpanText = styled(Text)`

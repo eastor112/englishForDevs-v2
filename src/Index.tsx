@@ -17,36 +17,36 @@ import {LogBox} from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
+export const customDefaultTheme = {
+  ...DefaultThemePaper,
+  ...DefaultThemeNavigation,
+  colors: {
+    ...DefaultThemePaper.colors,
+    ...DefaultThemeNavigation.colors,
+    primary: '#00c2cc',
+    accent: '#222831',
+    backgorund: '#EEEEEE',
+    text: '#393E46',
+    surface: '#EEEEEE',
+  },
+};
+
+export const customDarkTheme = {
+  ...DarkThemePaper,
+  ...DarkThemeNavigation,
+  colors: {
+    ...DarkThemePaper.colors,
+    ...DarkThemeNavigation.colors,
+    primary: '#00c2cc',
+    accent: '#222831',
+    backgorund: '#393E46',
+    text: '#EEEEEE',
+    surface: '#393E46',
+  },
+};
+
 const Index = () => {
   const {darkTheme} = useSelector((state: RootState) => state.settings);
-
-  const customDefaultTheme = {
-    ...DefaultThemePaper,
-    ...DefaultThemeNavigation,
-    colors: {
-      ...DefaultThemePaper.colors,
-      ...DefaultThemeNavigation.colors,
-      primary: '#00c2cc',
-      accent: '#222831',
-      backgorund: '#EEEEEE',
-      text: '#393E46',
-      surface: '#EEEEEE',
-    },
-  };
-
-  const customDarkTheme = {
-    ...DarkThemePaper,
-    ...DarkThemeNavigation,
-    colors: {
-      ...DarkThemePaper.colors,
-      ...DarkThemeNavigation.colors,
-      primary: '#00c2cc',
-      accent: '#222831',
-      backgorund: '#393E46',
-      text: '#EEEEEE',
-      surface: '#393E46',
-    },
-  };
 
   const theme = darkTheme ? customDarkTheme : customDefaultTheme;
 

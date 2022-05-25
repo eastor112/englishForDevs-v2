@@ -1,26 +1,30 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import {Text} from 'react-native-paper';
 import React from 'react';
 import {BarChart} from 'react-native-chart-kit';
 import {Dimensions} from 'react-native';
-
-const chartConfig = {
-  backgroundColor: '#0f0',
-  backgroundGradientFrom: '#fff',
-  backgroundGradientTo: '#eee',
-  decimalPlaces: 0,
-  color: (opacity = 2) => `rgba(0, 200, 180, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  style: {
-    borderRadius: 16,
-  },
-  propsForDots: {
-    r: '6',
-    strokeWidth: '2',
-    stroke: '#f00',
-  },
-};
+import {useTheme} from 'react-native-paper';
 
 const LearnedWordsChart = () => {
+  const {dark, colors} = useTheme();
+
+  const chartConfig = {
+    backgroundColor: '#0f0',
+    backgroundGradientFrom: dark ? '#33333399' : '#fff',
+    backgroundGradientTo: dark ? '#22222299' : '#fff',
+    decimalPlaces: 0,
+    color: (opacity = 2) => `rgba(0, 200, 180, ${opacity})`,
+    labelColor: () => `${colors.text}`,
+    style: {
+      borderRadius: 10,
+    },
+    propsForDots: {
+      r: '6',
+      strokeWidth: '2',
+      stroke: '#f00',
+    },
+  };
+
   return (
     <View>
       <Text>Learned words by day</Text>

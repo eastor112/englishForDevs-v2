@@ -1,7 +1,7 @@
 import React from 'react';
 import AppBar from '../../components/organisms/appBar/AppBar';
 import styled from 'styled-components/native';
-import {Button, Text} from 'react-native-paper';
+import {Button, Text, useTheme} from 'react-native-paper';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
@@ -12,6 +12,7 @@ import {setPhrasesRefs} from '../../redux/slices/phrases/phrasesSlice';
 interface Props extends DrawerScreenProps<any, any> {}
 
 const PracticeModesScreen = ({navigation}: Props) => {
+  const {dark} = useTheme();
   const {activeTopic} = useSelector((state: RootState) => state.topics);
   const dispatch = useAppDispatch();
 
@@ -35,7 +36,7 @@ const PracticeModesScreen = ({navigation}: Props) => {
       <ViewContainer>
         <TextInstruction>Select how you want practice</TextInstruction>
         <ModesContainer>
-          <ViewModeContainer style={styles.modeContainer}>
+          <ViewModeContainer style={styles.modeContainer} dark={dark}>
             <ImageForCard
               style={styles.imageForCard}
               source={{
@@ -53,7 +54,7 @@ const PracticeModesScreen = ({navigation}: Props) => {
             </Button>
           </ViewModeContainer>
 
-          <ViewModeContainer>
+          <ViewModeContainer style={styles.modeContainer} dark={dark}>
             <ImageForCard
               style={styles.imageForCard}
               source={{
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const TextInstruction = styled.Text`
+const TextInstruction = styled(Text)`
   font-size: 18px;
   font-weight: bold;
 `;
@@ -100,18 +101,19 @@ const ModesContainer = styled.View`
   flex: 1;
 `;
 
-const ViewModeContainer = styled.View`
+const ViewModeContainer = styled.View<{dark: boolean}>`
   border-radius: 10px;
   margin: 10px;
   margin-bottom: 10px;
   padding: 15px 25px;
-  background-color: white;
+  background-color: ${({dark}) => (dark ? '#55555577' : '#f2f2f2')};
   flex: 1;
 `;
 
 const ImageForCard = styled.Image`
   width: 100%;
   height: 100px;
+  margin-bottom: 5px;
 `;
 
 const TextMode = styled(Text)`

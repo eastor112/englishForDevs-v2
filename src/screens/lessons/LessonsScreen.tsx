@@ -31,7 +31,7 @@ const LessonsScreen = ({navigation}: Props) => {
         <View style={styles.containerTop}>
           <Image
             style={styles.image}
-            source={require('../../assets/images/objetives.jpg')}
+            source={require('../../assets/images/objetives.png')}
           />
         </View>
 

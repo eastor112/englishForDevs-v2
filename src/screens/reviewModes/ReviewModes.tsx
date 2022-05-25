@@ -1,24 +1,28 @@
 import React from 'react';
-import {Button, Text} from 'react-native-paper';
+import {Button, Text, useTheme} from 'react-native-paper';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import AppBar from '../../components/organisms/appBar/AppBar';
 import styled from 'styled-components/native';
 import {ImageBackground, StyleSheet, View} from 'react-native';
 
 const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
+  const {colors, dark} = useTheme();
+
   return (
     <>
       <AppBar />
       <ViewContainer>
         <TextInstruction>Select how you want practice</TextInstruction>
         <ModesContainer>
-          <ViewModeContainer style={styles.viewModeContainer}>
+          <ViewModeContainer
+            style={styles.viewModeContainer}
+            color={colors.background}>
             <ImageBackground
               source={require('../../assets/images/mode-1.png')}
               resizeMode="stretch"
               borderRadius={10}
               style={styles.imageBackground}>
-              <View style={styles.contained}>
+              <View style={dark ? styles.containeddark : styles.contained}>
                 <TextMode>Mode 1</TextMode>
                 <TextNameMode>Only priorized</TextNameMode>
                 <TextDescriptionMode>
@@ -34,13 +38,15 @@ const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
             </ImageBackground>
           </ViewModeContainer>
 
-          <ViewModeContainer style={styles.viewModeContainer}>
+          <ViewModeContainer
+            style={styles.viewModeContainer}
+            color={colors.background}>
             <ImageBackground
               source={require('../../assets/images/mode-2.png')}
               resizeMode="stretch"
               borderRadius={10}
               style={styles.imageBackground}>
-              <View style={styles.contained}>
+              <View style={dark ? styles.containeddark : styles.contained}>
                 <TextMode>Mode 2</TextMode>
                 <TextNameMode>Priorized and already learned</TextNameMode>
                 <TextDescriptionMode>
@@ -56,13 +62,15 @@ const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
             </ImageBackground>
           </ViewModeContainer>
 
-          <ViewModeContainer style={styles.viewModeContainer}>
+          <ViewModeContainer
+            style={styles.viewModeContainer}
+            color={colors.background}>
             <ImageBackground
               source={require('../../assets/images/mode-3.png')}
               resizeMode="stretch"
               borderRadius={10}
               style={styles.imageBackground}>
-              <View style={styles.contained}>
+              <View style={dark ? styles.containeddark : styles.contained}>
                 <TextMode>Mode 3</TextMode>
                 <TextNameMode>All words and phrases</TextNameMode>
                 <TextDescriptionMode>
@@ -95,7 +103,13 @@ const styles = StyleSheet.create({
   contained: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#FFFFFF99',
+    backgroundColor: '#FFFFFF66',
+    borderRadius: 10,
+  },
+  containeddark: {
+    flex: 1,
+    padding: 15,
+    backgroundColor: '#66666666',
     borderRadius: 10,
   },
 });
@@ -114,13 +128,11 @@ const ModesContainer = styled.View`
   flex: 1;
 `;
 
-const ViewModeContainer = styled.View`
+const ViewModeContainer = styled.View<{color: string}>`
   border-radius: 10px;
   margin: 10px;
   margin-bottom: 10px;
-
-  background-color: white;
-
+  background-color: ${props => props.color};
   flex: 1;
 `;
 

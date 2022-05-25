@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReviewScreen from '../screens/review/ReviewScreen';
 import WordsPracticeStackNavigator from './WordsPracticeStackNavigator';
 import PhrasesPracticeStackNavigator from './PhrasesPracticeStackNavigator';
+import {useTheme} from 'react-native-paper';
 
 export type RootDrawerParamList = {
   Main: undefined;
@@ -22,14 +23,16 @@ export type RootDrawerParamList = {
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
 const MainDrawerNavigator = () => {
+  const {colors} = useTheme();
+
   return (
     <Drawer.Navigator
       drawerContent={props => <DrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerActiveBackgroundColor: '#00c2cc',
-        drawerActiveTintColor: '#fff',
-        drawerInactiveTintColor: '#333',
+        drawerActiveBackgroundColor: colors.primary,
+        drawerActiveTintColor: colors.text,
+        drawerInactiveTintColor: colors.text,
         drawerLabelStyle: {
           marginLeft: -25,
           fontFamily: 'Roboto-Medium',

@@ -16,10 +16,11 @@ import {
 import {RootState, useAppDispatch} from '../../../redux/store';
 import {signOut} from '../../../redux/slices/auth/authSlice';
 import {useSelector} from 'react-redux';
+import {formatDisplayUserName} from '../../../utils/displayUserName';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const dispatch = useAppDispatch();
-  const {isAuthenticated} = useSelector((state: RootState) => state.auth);
+  const {isAuthenticated, user} = useSelector((state: RootState) => state.auth);
 
   const logoutApp = () => {
     dispatch(signOut());
@@ -33,17 +34,20 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   }, [isAuthenticated]);
 
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} style={styles.drawerContainer}>
       <View style={styles.drawerContent}>
         <View style={styles.userInfoSection}>
           <Avatar.Image
             source={{
-              uri: 'https://media-exp1.licdn.com/dms/image/C4D03AQG7ZaXWzjFrqQ/profile-displayphoto-shrink_400_400/0/1650819123471?e=1658361600&v=beta&t=3d4p0yVTnEMjz6Vyw6s0dw0IsfMojlqfVJ5C6Kljis4',
+              uri:
+                user?.photoURL || require('../../../assets/images/efdLogo.png'),
             }}
             size={140}
           />
-          <Title style={styles.title}>Emerson Asto</Title>
-          <Caption style={styles.caption}>emerar.mct@gmail.com</Caption>
+          <Title style={styles.title}>
+            {formatDisplayUserName(user?.displayName)}
+          </Title>
+          <Caption style={styles.caption}>{user?.email}</Caption>
         </View>
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItemList {...props} />
@@ -65,6 +69,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 export default DrawerContent;
 
 const styles = StyleSheet.create({
+  drawerContainer: {
+    borderRightWidth: 1,
+    borderRightColor: '#333',
+  },
   drawerContent: {
     flex: 1,
   },

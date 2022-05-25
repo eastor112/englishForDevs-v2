@@ -14,6 +14,7 @@ import {IPhrase} from '../../redux/slices/phrases/phrasesSlice.types';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Modal, Portal, Text, Provider, Button} from 'react-native-paper';
+import {useTheme} from '@react-navigation/native';
 import FinishModalTopic from '../../components/organisms/finishTopicModal/FinishModalTopic';
 import {countKnowOrDontknowPhrases} from '../../utils/countKnowOrUnknow';
 import {
@@ -22,12 +23,15 @@ import {
   prevPhraseIndex,
   setIsPhrasesReviewing,
 } from '../../redux/slices/phrases/phrasesSlice';
+import {customDarkTheme, customDefaultTheme} from '../../Index';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
     NativeStackScreenProps<RootStackParamList, any> {}
 
 const PhrasesScreen = ({navigation}: Props) => {
+  const {dark} = useTheme();
+
   const {phrasesRefs, phraseIndex, phrasesResponses, isCompleted, isReviewing} =
     useSelector((state: RootState) => state.phrases);
   const {activeLesson} = useSelector((state: RootState) => state.lessons);
@@ -94,7 +98,7 @@ const PhrasesScreen = ({navigation}: Props) => {
   };
 
   return (
-    <Provider>
+    <Provider theme={dark ? customDarkTheme : customDefaultTheme}>
       <Animated.View
         style={styles.screenContainer}
         entering={FadeIn.duration(1000)}>
@@ -123,7 +127,7 @@ const PhrasesScreen = ({navigation}: Props) => {
           )}
         </View>
 
-        <ViewContainer>
+        <ViewContainer style={styles.viewContainer}>
           <View>
             {activeLesson && (
               <InfoWordOrPhrase type="Phrase" lesson={activeLesson?.name} />

@@ -1,5 +1,5 @@
 import {View, StyleSheet, Image} from 'react-native';
-import {Text, Button} from 'react-native-paper';
+import {Text, Button, useTheme} from 'react-native-paper';
 import React, {useEffect, useState} from 'react';
 
 import DifficultyStars from '../../molecules/difficultyStars/DifficultyStars';
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const TopicCard = ({topic, navigate}: Props) => {
+  const {dark} = useTheme();
   const dispatch = useAppDispatch();
   const [img, setImg] = useState<string>('');
 
@@ -34,7 +35,7 @@ const TopicCard = ({topic, navigate}: Props) => {
   };
 
   return (
-    <View style={styles.topicContainer}>
+    <View style={dark ? styles.topicContainerDark : styles.topicContainer}>
       <View style={styles.topicImageContainer}>
         {img !== '' && (
           <Image
@@ -72,6 +73,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 10,
     backgroundColor: '#fff',
+    elevation: 5,
+  },
+  topicContainerDark: {
+    marginHorizontal: 20,
+    marginTop: 15,
+    padding: 15,
+    flexDirection: 'row',
+    borderRadius: 10,
+    backgroundColor: '#66666655',
     elevation: 5,
   },
   topicInfo: {
