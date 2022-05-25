@@ -1,8 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {IUserSignUp, IUserLogin} from '../../../screens/auth/auth.types';
-import {IAuthState, IUser} from './authSlice.types';
+import {IAuthState, IUser, IUserData} from './authSlice.types';
 
 GoogleSignin.configure({
   webClientId:
@@ -13,6 +14,7 @@ const initialState: IAuthState = {
   isAuthenticated: false,
   isLoading: false,
   user: null,
+  userData: null,
   error: null,
 };
 
@@ -27,6 +29,14 @@ export const signUpWithEmailandPassword = createAsyncThunk(
       await user.updateProfile({displayName});
       await user.sendEmailVerification();
 
+      const usersCollection = firestore().collection('users').doc(user.uid);
+      await usersCollection.set({
+        lessonsCompleted: [],
+        topicsCompleted: [],
+        wordsResponses: [],
+        phraseResponses: [],
+      } as IUserData);
+
       return {
         user: {
           uid: user.uid,
@@ -34,6 +44,12 @@ export const signUpWithEmailandPassword = createAsyncThunk(
           email: user.email as string,
           photoURL: 'https://picsum.photos/200/200',
         },
+        userData: {
+          wordsResponses: [],
+          phraseResponses: [],
+          lessonsCompleted: [],
+          topicsCompleted: [],
+        } as IUserData,
       } as IAuthState;
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
@@ -59,6 +75,9 @@ export const loginWithEmailandPassword = createAsyncThunk<
         photoURL: 'https://picsum.photos/200/200',
       });
 
+      const userDocument = firestore().collection('users').doc(user.uid);
+      const userData = (await userDocument.get()).data();
+
       return {
         user: {
           uid: user.uid,
@@ -66,6 +85,7 @@ export const loginWithEmailandPassword = createAsyncThunk<
           email: user.email as string,
           photoURL: 'https://picsum.photos/200/200',
         },
+        userData: userData as IUserData,
       } as IAuthState;
     } else {
       return {
@@ -98,6 +118,20 @@ export const loginWithGoogle = createAsyncThunk<IAuthState, void>(
       const credential = auth.GoogleAuthProvider.credential(idToken);
       const {user} = await auth().signInWithCredential(credential);
 
+      const userDocument = firestore().collection('users').doc(user.uid);
+      let userData = (await userDocument.get()).data();
+
+      if (!userData) {
+        await userDocument.set({
+          lessonsCompleted: [],
+          topicsCompleted: [],
+          wordsResponses: [],
+          phraseResponses: [],
+        } as IUserData);
+
+        userData = (await userDocument.get()).data();
+      }
+
       return {
         user: {
           uid: user.uid,
@@ -105,6 +139,7 @@ export const loginWithGoogle = createAsyncThunk<IAuthState, void>(
           email: user.email as string,
           photoURL: user.photoURL,
         },
+        userData: userData as IUserData,
       } as IAuthState;
     } catch (error) {
       return {
@@ -132,12 +167,15 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
     },
+
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+
     clearError: state => {
       state.error = null;
     },
+
     logout: state => {
       state.user = null;
       state.isAuthenticated = false;
@@ -149,6 +187,7 @@ const authSlice = createSlice({
     builder.addCase(signUpWithEmailandPassword.pending, state => {
       state.isLoading = true;
     });
+
     builder.addCase(signUpWithEmailandPassword.fulfilled, (state, action) => {
       if (action.payload.error) {
         state.isLoading = false;
@@ -156,6 +195,7 @@ const authSlice = createSlice({
       } else {
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.userData = action.payload.userData;
         state.isLoading = false;
         state.error = null;
       }
@@ -170,6 +210,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.userData = action.payload.userData;
         state.error = null;
       } else {
         state.isLoading = false;
@@ -195,6 +236,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.userData = action.payload.userData;
         state.error = null;
       } else {
         state.isLoading = false;

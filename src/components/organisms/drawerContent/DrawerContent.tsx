@@ -40,7 +40,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           <Avatar.Image
             source={{
               uri:
-                user?.photoURL || require('../../../assets/images/efdLogo.png'),
+                user?.photoURL ||
+                'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
             }}
             size={140}
           />

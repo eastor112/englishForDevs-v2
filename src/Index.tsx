@@ -14,8 +14,7 @@ import {
 } from 'react-native-paper';
 import {LogBox} from 'react-native';
 
-LogBox.ignoreLogs(['new NativeEventEmitter']);
-LogBox.ignoreLogs(['EventEmitter.removeListener']);
+LogBox.ignoreAllLogs();
 
 export const customDefaultTheme = {
   ...DefaultThemePaper,
