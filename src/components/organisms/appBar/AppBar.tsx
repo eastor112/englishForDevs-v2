@@ -3,7 +3,11 @@ import React from 'react';
 import {Appbar, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AppBar = () => {
+interface Props {
+  title: string;
+}
+
+const AppBar = ({title}: Props) => {
   const {colors} = useTheme();
 
   return (
@@ -16,7 +20,7 @@ const AppBar = () => {
         <View>
           <Text style={styles.title}>{'${eFD}'}</Text>
           <View style={styles.linksContainer}>
-            <Text style={styles.links}>{'Lessons'}</Text>
+            <Text style={styles.links}>{title}</Text>
           </View>
         </View>
       </View>

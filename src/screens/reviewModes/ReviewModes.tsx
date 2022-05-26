@@ -29,7 +29,7 @@ const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
 
   return (
     <>
-      <AppBar />
+      <AppBar title="Review" />
       <ViewContainer>
         <TextInstruction>Select how you want practice</TextInstruction>
         <ModesContainer>

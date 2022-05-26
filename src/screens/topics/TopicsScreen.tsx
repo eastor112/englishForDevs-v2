@@ -44,7 +44,7 @@ const TopicsScreen = ({navigation}: Props) => {
 
   return (
     <View>
-      <AppBar />
+      <AppBar title="Lessons > Topics" />
       {activeLesson && (
         <LessonInfo lesson={activeLesson} numberTopics={topics.length} />
       )}

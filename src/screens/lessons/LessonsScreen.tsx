@@ -25,7 +25,7 @@ const LessonsScreen = ({navigation}: Props) => {
 
   return (
     <View style={styles.scrollContainer}>
-      <AppBar />
+      <AppBar title="Lessons" />
 
       <ScrollView style={styles.mainContainer}>
         <View style={styles.containerTop}>

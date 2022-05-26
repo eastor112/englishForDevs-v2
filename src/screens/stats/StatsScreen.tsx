@@ -13,7 +13,7 @@ const StatsScreen = () => {
 
   return (
     <>
-      <AppBar />
+      <AppBar title="Stats" />
       <ViewContainer>
         <GreetText>Hello {formatDisplayUserName(user?.displayName)}!</GreetText>
         <InfoText>Here you can check your progress. Remember:</InfoText>
