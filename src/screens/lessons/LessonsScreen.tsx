@@ -1,17 +1,16 @@
 import React, {useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AppBar from '../../components/organisms/appBar/AppBar';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Dimensions} from 'react-native';
 import LessonItem from '../../components/organisms/lessonItem/LessonItem';
-import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {fetchAllLessons} from '../../redux/slices/lessons/lessonsSlice';
 import {ILesson} from '../../redux/slices/lessons/lessonsSlice.types';
+import {DrawerScreenProps} from '@react-navigation/drawer';
 
-interface Props extends NativeStackScreenProps<RootStackParamList, 'Lessons'> {}
+interface Props extends DrawerScreenProps<any, any> {}
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -25,7 +24,7 @@ const LessonsScreen = ({navigation}: Props) => {
 
   return (
     <View style={styles.scrollContainer}>
-      <AppBar title="Lessons" />
+      <AppBar navigation={navigation} title="Lessons" />
 
       <ScrollView style={styles.mainContainer}>
         <View style={styles.containerTop}>

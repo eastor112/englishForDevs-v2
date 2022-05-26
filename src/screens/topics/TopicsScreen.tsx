@@ -1,19 +1,18 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Dimensions} from 'react-native';
 import AppBar from '../../components/organisms/appBar/AppBar';
 import LessonInfo from '../../components/organisms/lessonInfo/LessonInfo';
 import TopicCard from '../../components/organisms/topicCard/TopicCard';
-import {RootStackParamList} from '../../navigation/LessonsStackNavigator';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {fetchAllTopics} from '../../redux/slices/topics/topicsSlice';
 import {resetWordsState} from '../../redux/slices/words/wordsSlice';
 import {useIsFocused} from '@react-navigation/native';
 import {resetPhrasesState} from '../../redux/slices/phrases/phrasesSlice';
+import {DrawerScreenProps} from '@react-navigation/drawer';
 
-interface Props extends NativeStackScreenProps<RootStackParamList, 'Topics'> {}
+interface Props extends DrawerScreenProps<any> {}
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -44,7 +43,7 @@ const TopicsScreen = ({navigation}: Props) => {
 
   return (
     <View>
-      <AppBar title="Lessons > Topics" />
+      <AppBar navigation={navigation} title="Lessons > Topics" />
       {activeLesson && (
         <LessonInfo lesson={activeLesson} numberTopics={topics.length} />
       )}

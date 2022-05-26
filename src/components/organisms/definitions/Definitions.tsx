@@ -19,7 +19,14 @@ const Definitions = ({data}: Props) => {
   }, [data]);
 
   return (
-    <List.Section title="Technical definition">
+    <List.Section
+      title={
+        data.order === 1
+          ? 'Technical definition'
+          : data.order === 2
+          ? 'Other definition'
+          : ''
+      }>
       <List.Accordion
         title={data.english}
         titleNumberOfLines={4}

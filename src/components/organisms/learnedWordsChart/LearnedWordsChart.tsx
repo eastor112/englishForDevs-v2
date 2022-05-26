@@ -39,7 +39,7 @@ const LearnedWordsChart = ({userData}: Props) => {
 
   return (
     <View>
-      <Text>Learned words by day</Text>
+      <Text>Learned by day</Text>
       <LineChart
         data={{
           labels: wordsDataset.labels.map(

@@ -32,7 +32,7 @@ const PracticeModesScreen = ({navigation}: Props) => {
 
   return (
     <>
-      <AppBar title="Lessons > Topics > Modes" />
+      <AppBar navigation={navigation} title="Lessons > Topics > Modes" />
       <ViewContainer>
         <TextInstruction>Select how you want practice</TextInstruction>
         <ModesContainer>

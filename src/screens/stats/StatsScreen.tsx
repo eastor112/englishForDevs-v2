@@ -7,13 +7,16 @@ import StatisticsNumbers from '../../components/organisms/statisticsNumbers/Stat
 import {RootState} from '../../redux/store';
 import {useSelector} from 'react-redux';
 import {formatDisplayUserName} from '../../utils/displayUserName';
+import {DrawerScreenProps} from '@react-navigation/drawer';
 
-const StatsScreen = () => {
+interface Props extends DrawerScreenProps<any, any> {}
+
+const StatsScreen = ({navigation}: Props) => {
   const {user, userData} = useSelector((state: RootState) => state.auth);
 
   return (
     <>
-      <AppBar title="Stats" />
+      <AppBar navigation={navigation} title="Stats" />
       <ViewContainer>
         <GreetText>Hello {formatDisplayUserName(user?.displayName)}!</GreetText>
         <InfoText>Here you can check your progress. Remember:</InfoText>

@@ -5,15 +5,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
   title: string;
+  navigation: any;
 }
 
-const AppBar = ({title}: Props) => {
+const AppBar = ({title, navigation}: Props) => {
   const {colors} = useTheme();
 
   return (
     <Appbar>
       <Appbar.Header>
-        <Appbar.Action icon="menu" onPress={() => {}} />
+        <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <View style={styles.logocontainer}>
         <Icon name="lightbulb-on-outline" size={30} color={colors.text} />
