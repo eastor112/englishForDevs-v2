@@ -1,12 +1,24 @@
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
 import React from 'react';
-import {BarChart} from 'react-native-chart-kit';
+import {LineChart} from 'react-native-chart-kit';
 import {Dimensions} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {IUserData} from '../../../redux/slices/auth/authSlice.types';
+import {
+  phrasesKnownLastSevenDays,
+  wordsKnownLastSevenDays,
+} from '../../../utils/lastSevenDays';
 
-const LearnedWordsChart = () => {
+interface Props {
+  userData: IUserData;
+}
+
+const LearnedWordsChart = ({userData}: Props) => {
   const {dark, colors} = useTheme();
+
+  const wordsDataset = wordsKnownLastSevenDays(userData?.wordsResponses);
+  const phrasesDataset = phrasesKnownLastSevenDays(userData?.phraseResponses);
 
   const chartConfig = {
     backgroundColor: '#0f0',
@@ -21,32 +33,33 @@ const LearnedWordsChart = () => {
     propsForDots: {
       r: '6',
       strokeWidth: '2',
-      stroke: '#f00',
+      stroke: '#00eaff66',
     },
   };
 
   return (
     <View>
       <Text>Learned words by day</Text>
-      <BarChart
+      <LineChart
         data={{
-          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', ''],
+          labels: wordsDataset.labels.map(
+            label => `${label.split('/')[1]}/${label.split('/')[0]}`,
+          ),
           datasets: [
             {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                0,
-              ],
+              data: [...wordsDataset.dataset],
+              color: () => '#c60000',
+              strokeWidth: 2,
+            },
+            {
+              data: [...phrasesDataset.dataset],
+              color: () => '#0900b5',
+              strokeWidth: 2,
             },
           ],
+          legend: ['Learned words', 'Learned phrases'],
         }}
-        width={Dimensions.get('window').width - 40} // from react-native
+        width={Dimensions.get('window').width - 40}
         height={220}
         yAxisLabel=""
         yAxisSuffix=""

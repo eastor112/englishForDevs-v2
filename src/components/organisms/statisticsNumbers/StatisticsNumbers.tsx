@@ -2,9 +2,15 @@ import {StyleSheet, View} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import React from 'react';
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../redux/store';
 
 const StatisticsNumbers = () => {
   const {dark} = useTheme();
+
+  const {userData} = useSelector((state: RootState) => state.auth);
+
+  userData;
 
   return (
     <View>
@@ -12,23 +18,33 @@ const StatisticsNumbers = () => {
 
       <ViewStatsContainer>
         <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
-          <NumberStat>475</NumberStat>
+          <NumberStat>{userData?.wordsResponses.length}</NumberStat>
           <SpanText>Practiced words</SpanText>
         </ViewStatContainer>
 
         <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
-          <NumberStat>320</NumberStat>
-          <SpanText>New learned words</SpanText>
+          <NumberStat>
+            {
+              userData?.wordsResponses.filter(wr => wr.response === 'know')
+                .length
+            }
+          </NumberStat>
+          <SpanText>Learned words</SpanText>
         </ViewStatContainer>
 
         <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
-          <NumberStat>120</NumberStat>
+          <NumberStat>{userData?.phraseResponses.length}</NumberStat>
           <SpanText>Practiced phrases</SpanText>
         </ViewStatContainer>
 
         <ViewStatContainer dark={dark} style={styles.viewStatContainer}>
-          <NumberStat>15 w/d</NumberStat>
-          <SpanText>Learning Rate</SpanText>
+          <NumberStat>
+            {
+              userData?.phraseResponses.filter(pr => pr.response === 'know')
+                .length
+            }
+          </NumberStat>
+          <SpanText>Learned phrases</SpanText>
         </ViewStatContainer>
       </ViewStatsContainer>
     </View>

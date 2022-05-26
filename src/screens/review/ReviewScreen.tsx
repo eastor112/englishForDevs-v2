@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {MaterialTopTabNavigationProp} from '@react-navigation/material-top-tabs';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -52,7 +53,7 @@ const ReviewScreen = ({navigation}: Props) => {
   useEffect(() => {
     setData(words[index]);
     return () => {};
-  }, [phrases, words]);
+  }, [index, phrases, words]);
 
   const handlePrev = () => {
     // dispatch(prevIndex());

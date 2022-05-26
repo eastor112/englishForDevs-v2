@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux';
 import {formatDisplayUserName} from '../../utils/displayUserName';
 
 const StatsScreen = () => {
-  const {user} = useSelector((state: RootState) => state.auth);
+  const {user, userData} = useSelector((state: RootState) => state.auth);
 
   return (
     <>
@@ -26,8 +26,7 @@ const StatsScreen = () => {
         </ViewMotivationalPhrase>
 
         <StatisticsNumbers />
-
-        <LearnedWordsChart />
+        {userData && <LearnedWordsChart userData={userData} />}
       </ViewContainer>
     </>
   );
