@@ -22,6 +22,7 @@ import {signUpWithEmailandPassword} from '../../redux/slices/auth/authSlice';
 interface Props extends NativeStackScreenProps<any, any> {}
 
 const loginValidationSchema = yup.object().shape({
+  displayName: yup.string().required('Name is required'),
   email: yup
     .string()
     .email('Please enter valid email')
@@ -66,8 +67,8 @@ const SignupScreen = ({navigation}: Props) => {
             isValid,
           }) => (
             <>
-              {errors.email && touched.email && (
-                <Text style={styles.errorText}>{errors.email}</Text>
+              {errors.displayName && touched.displayName && (
+                <Text style={styles.errorText}>{errors.displayName}</Text>
               )}
               <StyledTextInputPaper
                 style={{

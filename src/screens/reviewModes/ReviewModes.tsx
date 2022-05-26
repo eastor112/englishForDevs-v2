@@ -4,9 +4,28 @@ import {DrawerScreenProps} from '@react-navigation/drawer';
 import AppBar from '../../components/organisms/appBar/AppBar';
 import styled from 'styled-components/native';
 import {ImageBackground, StyleSheet, View} from 'react-native';
+import {useAppDispatch} from '../../redux/store';
+import {setWordsAndPhrasesRefs} from '../../redux/slices/review/reviewSlice';
 
 const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
   const {colors, dark} = useTheme();
+  const dispatch = useAppDispatch();
+
+  const handleSelectMode1 = () => {
+    dispatch(setWordsAndPhrasesRefs());
+    navigation.navigate('Practice');
+  };
+
+  const handleSelectMode2 = () => {
+    dispatch(setWordsAndPhrasesRefs());
+
+    navigation.navigate('Practice');
+  };
+
+  const handleSelectMode3 = () => {
+    dispatch(setWordsAndPhrasesRefs());
+    navigation.navigate('Practice');
+  };
 
   return (
     <>
@@ -29,9 +48,7 @@ const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
                   All words and phrases that you marked in diferents topics for
                   review will be shown.
                 </TextDescriptionMode>
-                <Button
-                  mode="contained"
-                  onPress={() => navigation.navigate('Practice')}>
+                <Button mode="contained" onPress={handleSelectMode1}>
                   <Text> Start practice</Text>
                 </Button>
               </View>
@@ -53,9 +70,7 @@ const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
                   All words and phrases that you view in diferents topics will
                   be shown.
                 </TextDescriptionMode>
-                <Button
-                  mode="contained"
-                  onPress={() => navigation.navigate('Practice')}>
+                <Button mode="contained" onPress={handleSelectMode2}>
                   <Text> Start practice</Text>
                 </Button>
               </View>
@@ -77,9 +92,7 @@ const ReviewModes = ({navigation}: DrawerScreenProps<any, any>) => {
                   All words and phrases will be shown, even if you haven't done
                   the lesson yet.
                 </TextDescriptionMode>
-                <Button
-                  mode="contained"
-                  onPress={() => navigation.navigate('Practice')}>
+                <Button mode="contained" onPress={handleSelectMode3}>
                   <Text> Start practice</Text>
                 </Button>
               </View>

@@ -6,6 +6,7 @@ import lessonsReducer from './slices/lessons/lessonsSlice';
 import topicsReducer from './slices/topics/topicsSlice';
 import wordsReducer from './slices/words/wordsSlice';
 import phrasesReducer from './slices/phrases/phrasesSlice';
+import reviewReducer from './slices/review/reviewSlice';
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     topics: topicsReducer,
     words: wordsReducer,
     phrases: phrasesReducer,
+    review: reviewReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
