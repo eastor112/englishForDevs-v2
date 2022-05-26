@@ -11,7 +11,9 @@ export interface IPhraseTranslation {
 }
 
 export interface IPhraseResponse {
+  lessonId: string;
+  topicId: string;
   phraseId: string;
-  date: string;
   response: 'know' | 'dontKnow';
+  date: string;
 }

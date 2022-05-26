@@ -1,3 +1,4 @@
+import {IPhraseResponse} from '../phrases/phrasesSlice.types';
 import {IWordResponse} from '../words/wordsSlice.types';
 
 export interface IAuthState {
@@ -17,17 +18,9 @@ export interface IUser {
 
 export type IUserData = {
   wordsResponses: IWordResponse[];
-  phraseResponses: PhraseResponse[];
+  phraseResponses: IPhraseResponse[];
   lessonsCompleted: LessonsCompleted[];
   topicsCompleted: TopicsCompleted[];
-};
-
-export type PhraseResponse = {
-  topicId: string;
-  lessonId: string;
-  phraseId: string;
-  response: string;
-  date: string;
 };
 
 export type LessonsCompleted = {

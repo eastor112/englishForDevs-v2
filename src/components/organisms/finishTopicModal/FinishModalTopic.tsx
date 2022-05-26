@@ -4,7 +4,10 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAppDispatch, RootState} from '../../../redux/store';
 import {ActionCreatorWithPayload} from '@reduxjs/toolkit';
-import {updateUserWordsResponses} from '../../../redux/slices/auth/authSlice';
+import {
+  updateUserPhraseResponses,
+  updateUserWordsResponses,
+} from '../../../redux/slices/auth/authSlice';
 import {useSelector} from 'react-redux';
 
 interface Props {
@@ -29,9 +32,14 @@ const FinishModalTopic = ({
 }: Props) => {
   const dispatch = useAppDispatch();
   const {wordsResponses} = useSelector((state: RootState) => state.words);
+  const {phrasesResponses} = useSelector((state: RootState) => state.phrases);
 
   const handleGoTopics = () => {
-    dispatch(updateUserWordsResponses(wordsResponses));
+    if (isWord) {
+      dispatch(updateUserWordsResponses(wordsResponses));
+    } else {
+      dispatch(updateUserPhraseResponses(phrasesResponses));
+    }
     setIsModalVisible(false);
     navigate('Topics');
   };

@@ -6,6 +6,7 @@ import {IUserSignUp, IUserLogin} from '../../../screens/auth/auth.types';
 import {IAuthState, IUser, IUserData} from './authSlice.types';
 import {RootState} from '../../store';
 import {IWordResponse} from '../words/wordsSlice.types';
+import {IPhraseResponse} from '../phrases/phrasesSlice.types';
 
 GoogleSignin.configure({
   webClientId:
@@ -161,12 +162,24 @@ export const signOut = createAsyncThunk('auth/signOut', async (_, thunkAPI) => {
   }
 });
 
+export const setUserData = createAsyncThunk(
+  'auth/setUserData',
+  async (uid: string) => {
+    const userDocument = firestore().collection('users').doc(uid);
+    const userData = (await userDocument.get()).data();
+
+    return userData as IUserData;
+  },
+);
+
 export const updateUserWordsResponses = createAsyncThunk(
   'auth/updateUserWordsResponses',
   async (responses: IWordResponse[], {getState}) => {
     const {
       auth: {user, userData},
     } = getState() as RootState;
+
+    const userDocument = firestore().collection('users').doc(user!.uid);
 
     if (userData?.wordsResponses) {
       const updatedWordsResponses = userData?.wordsResponses.map(wr => {
@@ -186,30 +199,65 @@ export const updateUserWordsResponses = createAsyncThunk(
           ),
       );
 
-      const userDocument = firestore().collection('users').doc(user!.uid);
-
       await userDocument.update({
         wordsResponses: [...updatedWordsResponses, ...newWordResponses],
       });
 
-      return {
-        userData: {
-          wordsResponses: [...updatedWordsResponses, ...newWordResponses],
-        },
-      } as IAuthState;
+      return [...updatedWordsResponses, ...newWordResponses] as IWordResponse[];
+    }
+
+    await userDocument.update({
+      wordsResponses: responses,
+    } as IUserData);
+
+    return responses;
+  },
+);
+
+export const updateUserPhraseResponses = createAsyncThunk(
+  'auth/updateUserPhraseResponses',
+  async (responses: IPhraseResponse[], {getState}) => {
+    const {
+      auth: {user, userData},
+    } = getState() as RootState;
+
+    if (userData?.phraseResponses) {
+      const updatedPhraseResponses = userData?.phraseResponses.map(pr => {
+        const existPhrase = responses.find(r => r.phraseId === pr.phraseId);
+
+        if (existPhrase) {
+          return existPhrase;
+        }
+
+        return pr;
+      });
+
+      const newPhraseResponses = responses.filter(
+        res =>
+          !userData?.phraseResponses.some(
+            (pr: IPhraseResponse) => pr.phraseId === res.phraseId,
+          ),
+      );
+
+      const userDocument = firestore().collection('users').doc(user!.uid);
+
+      await userDocument.update({
+        phraseResponses: [...updatedPhraseResponses, ...newPhraseResponses],
+      });
+
+      return [
+        ...updatedPhraseResponses,
+        ...newPhraseResponses,
+      ] as IPhraseResponse[];
     }
 
     const userDocument = firestore().collection('users').doc(user!.uid);
 
-    await userDocument.set({
-      wordsResponses: responses,
+    await userDocument.update({
+      phraseResponses: responses,
     } as IUserData);
 
-    return {
-      userData: {
-        wordsResponses: responses,
-      },
-    } as IAuthState;
+    return responses;
   },
 );
 
@@ -313,7 +361,29 @@ const authSlice = createSlice({
 
     builder.addCase(updateUserWordsResponses.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.userData = action.payload.userData;
+      if (state.userData) {
+        state.userData.wordsResponses = action.payload;
+      }
+    });
+
+    builder.addCase(updateUserPhraseResponses.pending, state => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(updateUserPhraseResponses.fulfilled, (state, action) => {
+      state.isLoading = false;
+      if (state.userData) {
+        state.userData.phraseResponses = action.payload;
+      }
+    });
+
+    builder.addCase(setUserData.pending, state => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(setUserData.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userData = action.payload;
     });
   },
 });

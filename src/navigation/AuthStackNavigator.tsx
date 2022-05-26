@@ -6,7 +6,7 @@ import SignupScreen from '../screens/auth/SignupScreen';
 import {RootState, useAppDispatch} from '../redux/store';
 import auth from '@react-native-firebase/auth';
 import {useSelector} from 'react-redux';
-import {setUser} from '../redux/slices/auth/authSlice';
+import {setUser, setUserData} from '../redux/slices/auth/authSlice';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +25,8 @@ const AuthStackNavigator = () => {
           photoURL: user.photoURL,
         }),
       );
+
+      dispatch(setUserData(user.uid));
     }
 
     if (initializing) {

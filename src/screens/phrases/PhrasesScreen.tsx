@@ -24,6 +24,7 @@ import {
   setIsPhrasesReviewing,
 } from '../../redux/slices/phrases/phrasesSlice';
 import {customDarkTheme, customDefaultTheme} from '../../Index';
+import {updateUserPhraseResponses} from '../../redux/slices/auth/authSlice';
 
 interface Props
   extends MaterialTopTabNavigationProp<any, any>,
@@ -35,6 +36,7 @@ const PhrasesScreen = ({navigation}: Props) => {
   const {phrasesRefs, phraseIndex, phrasesResponses, isCompleted, isReviewing} =
     useSelector((state: RootState) => state.phrases);
   const {activeLesson} = useSelector((state: RootState) => state.lessons);
+  const {activeTopic} = useSelector((state: RootState) => state.topics);
 
   const dispatch = useAppDispatch();
 
@@ -70,6 +72,8 @@ const PhrasesScreen = ({navigation}: Props) => {
     if (phraseId) {
       dispatch(
         addPhraseResponse({
+          lessonId: activeLesson!.id,
+          topicId: activeTopic!.id,
           phraseId: phraseId,
           date: date.toISOString(),
           response: 'know',
@@ -86,6 +90,8 @@ const PhrasesScreen = ({navigation}: Props) => {
     if (phraseId) {
       dispatch(
         addPhraseResponse({
+          lessonId: activeLesson!.id,
+          topicId: activeTopic!.id,
           phraseId: phraseId,
           date: date.toISOString(),
           response: 'dontKnow',
@@ -95,6 +101,11 @@ const PhrasesScreen = ({navigation}: Props) => {
     if (!isReviewing) {
       dispatch(nextPhraseIndex());
     }
+  };
+
+  const handleSavePhrasesResponseAndGoTopicsScreen = () => {
+    dispatch(updateUserPhraseResponses(phrasesResponses));
+    navigation.navigate('Topics');
   };
 
   return (
@@ -174,7 +185,7 @@ const PhrasesScreen = ({navigation}: Props) => {
             style={styles.floatButton}
             uppercase={false}
             mode="outlined"
-            onPress={() => navigation.navigate('Topics')}>
+            onPress={handleSavePhrasesResponseAndGoTopicsScreen}>
             Finish
           </Button>
         )}
