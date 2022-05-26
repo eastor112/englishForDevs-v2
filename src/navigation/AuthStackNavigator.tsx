@@ -7,6 +7,7 @@ import {RootState, useAppDispatch} from '../redux/store';
 import auth from '@react-native-firebase/auth';
 import {useSelector} from 'react-redux';
 import {setUser, setUserData} from '../redux/slices/auth/authSlice';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,8 @@ const AuthStackNavigator = () => {
   }
 
   useEffect(() => {
+    SplashScreen.hide();
+
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
 
     return subscriber;
