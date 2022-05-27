@@ -1,15 +1,15 @@
-### English for Devs App
+# English for Devs App
+
+### By Emerson Asto
 
 Android application made with React Native CLI and Typescript.
-
-### Author: Emerson Maximo Asto Rodríguez
 
 ### How to run
 
 Clone the project, and then:
 
-1. yarn
-2. yarn android (Make sure you have an emulator or device in debug mode)
+1. First install using `yarn`
+2. Make sure you have an emulator or device in debug mode: `yarn android`
 
 ## Apk
 
